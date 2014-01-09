@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 public class DAJBI {
 
-	static final Logger logger = Logger.getLogger(DAJBI.class);
+	public static final Logger logger = Logger.getLogger(DAJBI.class);
 
 	public static void main(String[] args) {
 

@@ -15,6 +15,8 @@ public class DAJBITest {
 
 	@Test
 	public void test() {
+		 System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
 		fail("Not yet implemented");
 	}
 
