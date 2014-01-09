@@ -68,9 +68,10 @@ public class ClassFileReader {
 	}
 
 	public ClassFile read() {
-		if (!isValid())
+		if (!isLoaded() || !isValid())
 			return null;
 		
+			
 		
 
 		return null;

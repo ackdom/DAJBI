@@ -27,6 +27,24 @@ public class ClassFileReaderTest {
 		ClassFileReader reader = new ClassFileReader(VMSettings.TEST_CLASSES+"SampleClass01.class");
 		assertTrue(reader.isValid());
 	}
+	
+	@Test
+	public void ReadmeReadTest() {
+		ClassFileReader reader = new ClassFileReader("README.md");
+	
+		assertTrue(reader.isLoaded());
+	}
+	
+	@Test
+	public void ReadmeValidTest() {
+		ClassFileReader reader = new ClassFileReader("README.md");
+		assertFalse(reader.isValid());
+	}
+	
+	public void nonExistingRead() {
+		ClassFileReader reader = new ClassFileReader("not.class");
+		assertFalse(reader.isLoaded());		
+	}
 
 
 }
