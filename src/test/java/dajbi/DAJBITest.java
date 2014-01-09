@@ -3,7 +3,7 @@
  */
 package dajbi;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -14,10 +14,10 @@ import org.junit.Test;
 public class DAJBITest {
 
 	@Test
-	public void test() {
+	public void WorkingDir() {
 		 System.out.println("Working Directory = " +
 	              System.getProperty("user.dir"));
-		fail("Not yet implemented");
+//		fail("Not yet implemented");
 	}
 
 }
