@@ -1,0 +1,54 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>binary</id>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<baseDirectory>veseldom-adventure</baseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>/lib</outputDirectory>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/dist</directory>
+			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
+			<includes>
+				<include>*.sh</include>
+			</includes>
+			<fileMode>777</fileMode>
+		</fileSet>
+		<fileSet>
+			<directory>src/</directory>
+			<outputDirectory>/src/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>*.xml</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/docs/</directory>
+			<outputDirectory>/diagrams</outputDirectory>
+			<includes>
+				<include>*.png</include>
+			</includes>
+		</fileSet>
+			<fileSet>
+			<directory>src/main/docs/</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>*.txt</include>
+			</includes>
+		</fileSet>
+
+	</fileSets>
+</assembly>
