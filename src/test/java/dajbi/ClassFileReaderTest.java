@@ -2,6 +2,7 @@ package dajbi;
 
 import static org.junit.Assert.*;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +15,7 @@ public class ClassFileReaderTest {
 
 	@Before
 	public void setUp() throws Exception {
+		BasicConfigurator.configure();
 	}
 	
 	@Test
@@ -41,6 +43,7 @@ public class ClassFileReaderTest {
 		assertFalse(reader.isValid());
 	}
 	
+	@Test
 	public void nonExistingRead() {
 		ClassFileReader reader = new ClassFileReader("not.class");
 		assertFalse(reader.isLoaded());		
