@@ -70,4 +70,13 @@ public class ConstantPool {
 		return null;
 	}
 
+	/**
+	 * @return the items
+	 */
+	public ConstantPoolItem[] getItems() {
+		return items;
+	}
+
+	
+	
 }

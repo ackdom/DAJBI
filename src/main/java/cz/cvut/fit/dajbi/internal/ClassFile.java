@@ -61,11 +61,11 @@ public class ClassFile {
 	}
 
 	/**
-	 * @param constantPoolCount
+	 * @param i
 	 *            the constantPoolCount to set
 	 */
-	public void setConstantPoolCount(short constantPoolCount) {
-		this.constantPoolCount = constantPoolCount;
+	public void setConstantPoolCount(int i) {
+		this.constantPoolCount = (short) i;
 	}
 
 	/**

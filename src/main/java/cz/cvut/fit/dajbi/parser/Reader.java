@@ -16,17 +16,24 @@ public class Reader {
 		return bytes[index];
 	}
 	
-
 	public byte readByte() {
 		return bytes[index++];
 	}
 	
 	public short readShort() {
-		short tmp = readByte();
-		tmp = (short) (tmp << 8);
-		tmp += readByte();
-		return tmp;		
+		ByteBuffer buffer = ByteBuffer.allocate(2);
+	    buffer.put(readBytes(2));
+	    buffer.flip();
+	    return buffer.getShort();	
 	}
+	
+	public short peekShort() {
+		ByteBuffer buffer = ByteBuffer.allocate(2);
+	    buffer.put(peekBytes(2));
+	    buffer.flip();
+	    return buffer.getShort();	
+	}
+	
 	
 	public int readInt() {
 		int tmp = 0;
@@ -55,6 +62,14 @@ public class Reader {
 		byte[] arr = new byte[i];
 		for(int j = 0 ; j<i;j++) {
 			arr[j] = readByte();
+		}
+		return arr;
+	}
+	
+	public byte[] peekBytes(int i) {
+		byte[] arr = new byte[i];
+		for(int j = 0 ; j<i;j++) {
+			arr[j] = peekByte();
 		}
 		return arr;
 	}

@@ -36,7 +36,6 @@ public class ClassFileReader {
 		try {
 			this.reader = new Reader(IOUtils.toByteArray(new FileInputStream(
 					fileName)));
-			this.read();
 		} catch (FileNotFoundException e) {
 			DAJBI.logger.error("Could not find class file", e);
 		} catch (IOException e) {
@@ -73,16 +72,16 @@ public class ClassFileReader {
 		return false;
 	}
 
-	private ClassFile read() {
+	public ClassFile read() {
 		if (!isLoaded() || !isValid())
-			return null;
+			return null ;
 
 		ClassFile classFile = new ClassFile();
 		this.classFile = classFile;
 		
 		classFile.setMinorVersion(reader.readShort());
 		classFile.setMajorVersion(reader.readShort());
-		classFile.setConstantPoolCount(reader.readShort());
+		classFile.setConstantPoolCount(((short)reader.readShort()-1));
 		ConstantPool pool = new ConstantPool(reader,
 				classFile.getConstantPoolCount());
 		classFile.setConstantPool(pool);
@@ -99,27 +98,28 @@ public class ClassFileReader {
 		classFile.setFieldsCount(reader.readShort());
 		Field[] fields = new Field[classFile.getFieldsCount()];
 		for(int i = 0; i < classFile.getFieldsCount();i++) {
-			fields[i] = new Field(classFile);
+			fields[i] = new Field(this);
 		}
 		classFile.setFields(fields);
 		
 		classFile.setMethodsCount(reader.readShort());
 		Method[] methods = new Method[classFile.getMethodsCount()];
 		for(int i = 0; i < classFile.getFieldsCount();i++) {
-			methods[i] = new Method(classFile);
+			methods[i] = new Method(this);
 		}
 		classFile.setMethods(methods);
 		
 		classFile.setAttributesCount(reader.readShort());
 		Attribute[] attributes = new Attribute[classFile.getAttributesCount()];
+		AttributeReader attributereader = new AttributeReader(this);
 		for(int i = 0; i < classFile.getAttributesCount();i++) {
-			attributes[i] = new Attribute(this);
+			attributes[i] = attributereader.readAttribute();
 		}
 		classFile.setAttributes(attributes);
 		
 		
 
-		return null;
+		return classFile;
 	}
 
 	/**
