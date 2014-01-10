@@ -1,11 +1,16 @@
 package dajbi;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.internal.VMSettings;
 import cz.cvut.fit.dajbi.parser.ClassFileReader;
 
@@ -13,9 +18,15 @@ public class ClassFileReaderTest {
 	
 	ClassFileReader reader;
 
+	@BeforeClass
+	public static void once() {
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.OFF);
+	}
+	
 	@Before
 	public void setUp() throws Exception {
-		BasicConfigurator.configure();
+
 	}
 	
 	@Test
@@ -23,6 +34,13 @@ public class ClassFileReaderTest {
 		ClassFileReader reader = new ClassFileReader(VMSettings.TEST_CLASSES+"SampleClass01.class");
 		assertTrue(reader.isLoaded());
 	}
+	
+	@Test
+	public void parseTest() {
+		ClassFileReader reader = new ClassFileReader(VMSettings.TEST_CLASSES+"SampleClass01.class");
+		assertTrue(reader.isLoaded());
+	}
+	
 	
 	@Test
 	public void validTest() {
@@ -47,6 +65,13 @@ public class ClassFileReaderTest {
 	public void nonExistingRead() {
 		ClassFileReader reader = new ClassFileReader("not.class");
 		assertFalse(reader.isLoaded());		
+	}
+	
+	@Test
+	public void parseClassFile() {
+		Logger.getRootLogger().setLevel(Level.ALL);
+		ClassFileReader reader = new ClassFileReader(VMSettings.TEST_CLASSES+"SampleClass01.class");
+		reader.read();
 	}
 
 
