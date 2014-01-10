@@ -1,4 +1,4 @@
-package cz.cvut.fit.dajbi.constantpool;
+package cz.cvut.fit.dajbi.internal.constantpool;
 
 import java.nio.ByteBuffer;
 

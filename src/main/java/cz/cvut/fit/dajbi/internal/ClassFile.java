@@ -1,6 +1,7 @@
 package cz.cvut.fit.dajbi.internal;
 
-import cz.cvut.fit.dajbi.constantpool.ConstantPool;
+import cz.cvut.fit.dajbi.internal.attributes.Attribute;
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPool;
 
 public class ClassFile {
 

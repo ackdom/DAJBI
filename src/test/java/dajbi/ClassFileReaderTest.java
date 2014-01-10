@@ -71,7 +71,7 @@ public class ClassFileReaderTest {
 	public void parseClassFile() {
 		Logger.getRootLogger().setLevel(Level.ALL);
 		ClassFileReader reader = new ClassFileReader(VMSettings.TEST_CLASSES+"SampleClass01.class");
-		reader.read();
+		reader.getClass();
 	}
 
 

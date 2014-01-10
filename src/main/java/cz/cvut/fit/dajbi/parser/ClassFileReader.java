@@ -7,11 +7,11 @@ import java.io.IOException;
 import org.apache.commons.io.IOUtils;
 
 import cz.cvut.fit.dajbi.DAJBI;
-import cz.cvut.fit.dajbi.constantpool.ConstantPool;
-import cz.cvut.fit.dajbi.internal.Attribute;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
 import cz.cvut.fit.dajbi.internal.Method;
+import cz.cvut.fit.dajbi.internal.attributes.Attribute;
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPool;
 
 public class ClassFileReader {
 
@@ -20,7 +20,7 @@ public class ClassFileReader {
 	 */
 	String fileName;
 	Reader reader;
-	byte[] bytes;
+	ClassFile classFile;
 
 	/**
 	 * Current index in classfile
@@ -36,6 +36,7 @@ public class ClassFileReader {
 		try {
 			this.reader = new Reader(IOUtils.toByteArray(new FileInputStream(
 					fileName)));
+			this.read();
 		} catch (FileNotFoundException e) {
 			DAJBI.logger.error("Could not find class file", e);
 		} catch (IOException e) {
@@ -72,11 +73,13 @@ public class ClassFileReader {
 		return false;
 	}
 
-	public ClassFile read() {
+	private ClassFile read() {
 		if (!isLoaded() || !isValid())
 			return null;
 
 		ClassFile classFile = new ClassFile();
+		this.classFile = classFile;
+		
 		classFile.setMinorVersion(reader.readShort());
 		classFile.setMajorVersion(reader.readShort());
 		classFile.setConstantPoolCount(reader.readShort());
@@ -110,7 +113,7 @@ public class ClassFileReader {
 		classFile.setAttributesCount(reader.readShort());
 		Attribute[] attributes = new Attribute[classFile.getAttributesCount()];
 		for(int i = 0; i < classFile.getAttributesCount();i++) {
-			attributes[i] = new Attribute(classFile);
+			attributes[i] = new Attribute(this);
 		}
 		classFile.setAttributes(attributes);
 		
@@ -118,5 +121,49 @@ public class ClassFileReader {
 
 		return null;
 	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	/**
+	 * @return the reader
+	 */
+	public Reader getReader() {
+		return reader;
+	}
+
+	/**
+	 * @param reader the reader to set
+	 */
+	public void setReader(Reader reader) {
+		this.reader = reader;
+	}
+
+	/**
+	 * @return the classFile
+	 */
+	public ClassFile getClassFile() {
+		return classFile;
+	}
+
+	/**
+	 * @param classFile the classFile to set
+	 */
+	public void setClassFile(ClassFile classFile) {
+		this.classFile = classFile;
+	}
+	
+	
 
 }
