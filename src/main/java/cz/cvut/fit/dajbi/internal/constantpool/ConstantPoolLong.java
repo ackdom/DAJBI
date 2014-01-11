@@ -14,6 +14,8 @@ public class ConstantPoolLong extends ConstantPoolItem {
 		value = constantPool.reader.readLong();
 
 		DAJBI.logger.trace(constantPool.currentIndex + " Long with = " + value);
+		constantPool.currentIndex++;
+
 	}
 
 }

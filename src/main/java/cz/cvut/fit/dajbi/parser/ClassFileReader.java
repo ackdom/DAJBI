@@ -104,7 +104,7 @@ public class ClassFileReader {
 		
 		classFile.setMethodsCount(reader.readShort());
 		Method[] methods = new Method[classFile.getMethodsCount()];
-		for(int i = 0; i < classFile.getFieldsCount();i++) {
+		for(int i = 0; i < classFile.getMethodsCount();i++) {
 			methods[i] = new Method(this);
 		}
 		classFile.setMethods(methods);

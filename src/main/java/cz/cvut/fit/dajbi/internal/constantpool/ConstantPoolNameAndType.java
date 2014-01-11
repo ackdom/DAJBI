@@ -17,10 +17,10 @@ public class ConstantPoolNameAndType extends ConstantPoolItem {
 	}
 
 	public String getName() {
-		return ((ConstantPoolUTF8) constantPool.items[nameIndex]).getTitle();
+		return constantPool.getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
 	
 	public String getDescriptorIndex() {
-		return ((ConstantPoolUTF8) constantPool.items[descriptorInex]).getTitle();
+		return constantPool.getItem(descriptorInex, ConstantPoolUTF8.class).getTitle();
 	}
 }

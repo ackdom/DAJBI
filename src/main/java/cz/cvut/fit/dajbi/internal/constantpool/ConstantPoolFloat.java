@@ -13,6 +13,9 @@ public class ConstantPoolFloat extends ConstantPoolItem {
 		byte[] bytes = new byte[8];
 		ByteBuffer.wrap(bytes).putInt(constantPool.reader.readInt());
 		value = ByteBuffer.wrap(bytes).getFloat();
-		DAJBI.logger.trace(constantPool.currentIndex+" Float with = "+value);	}
+		DAJBI.logger.trace(constantPool.currentIndex+" Float with = "+value);	
+	
+	}
+	
 
 }

@@ -15,6 +15,7 @@ public class ConstantPoolDouble extends ConstantPoolItem {
 		//ByteBuffer.wrap(bytes).putLong(constantPool.reader.readLong());
 		value = constantPool.reader.readDouble();
 		DAJBI.logger.trace(constantPool.currentIndex+" Double with = "+value);
+		constantPool.currentIndex++;
 		// TODO Auto-generated constructor stub
 	}
 

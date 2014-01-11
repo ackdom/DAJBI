@@ -39,10 +39,11 @@ public class Field {
 	
 	
 	public String getName() {
-		return ((ConstantPoolUTF8)classFileReader.getClassFile().getConstantPool().getItems()[nameIndex]).getTitle();
+		return classFileReader.getClassFile().getConstantPool().getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
+	
 	public String getDescription() {
-		return ((ConstantPoolUTF8)classFileReader.getClassFile().getConstantPool().getItems()[descriptorIndex]).getTitle();
+		return classFileReader.getClassFile().getConstantPool().getItem(descriptorIndex, ConstantPoolUTF8.class).getTitle();
 	}
 
 }

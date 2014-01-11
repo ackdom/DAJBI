@@ -28,8 +28,8 @@ public class AttributeReader {
 	public Attribute readAttribute() {
 		
 		short index = reader.peekShort();
-		String type = ((ConstantPoolUTF8)constantPool.getItems()[index]).getTitle();
-		Type valueOf = Attribute.Type.valueOf(type);
+		String type = constantPool.getItem(index,ConstantPoolUTF8.class).getTitle();
+		Type valueOf = Attribute.getType(type);
 		
 		switch (valueOf) {
 		case Code:			

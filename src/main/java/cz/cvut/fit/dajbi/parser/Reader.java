@@ -13,7 +13,11 @@ public class Reader {
 	}
 	
 	public byte peekByte() {
-		return bytes[index];
+		return peekByte(0);
+	}
+	
+	private byte peekByte(int i) {
+		return bytes[index+i];		
 	}
 	
 	public byte readByte() {
@@ -69,7 +73,7 @@ public class Reader {
 	public byte[] peekBytes(int i) {
 		byte[] arr = new byte[i];
 		for(int j = 0 ; j<i;j++) {
-			arr[j] = peekByte();
+			arr[j] = peekByte(j);
 		}
 		return arr;
 	}

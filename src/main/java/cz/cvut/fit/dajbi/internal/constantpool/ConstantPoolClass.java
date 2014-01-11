@@ -4,15 +4,15 @@ import cz.cvut.fit.dajbi.DAJBI;
 
 public class ConstantPoolClass extends ConstantPoolItem {
 
-	short name;
+	short nameIndex;
 
 	public ConstantPoolClass(ConstantPool constantPool) {
 		super(constantPool);
-		name = constantPool.reader.readShort();
-		DAJBI.logger.trace(constantPool.currentIndex + " Loaded class with name " + name);
+		nameIndex = constantPool.reader.readShort();
+		DAJBI.logger.trace(constantPool.currentIndex + " Loaded class with name " + nameIndex);
 	}
 
 	public String getName() {
-		return ((ConstantPoolUTF8) constantPool.items[name]).getTitle();
+		return constantPool.getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
 }

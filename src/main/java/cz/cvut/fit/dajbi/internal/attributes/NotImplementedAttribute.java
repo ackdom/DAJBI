@@ -11,7 +11,7 @@ public class NotImplementedAttribute extends Attribute {
 		
 		attributeReader.getReader().readBytes(attributeLength);
 		
-		String name = ((ConstantPoolUTF8)attributeReader.getConstantPool().getItems()[attributeNameIndex]).getTitle();
+		String name = attributeReader.getConstantPool().getItem(attributeNameIndex,ConstantPoolUTF8.class).getTitle();
 		DAJBI.logger.trace("UNIMPLEMENTED ATTRIBUTED ( "+name+" )");		
 	}
 

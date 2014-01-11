@@ -1,5 +1,6 @@
 package cz.cvut.fit.dajbi.internal.constantpool;
 
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPoolItem.Tag;
 import cz.cvut.fit.dajbi.parser.Reader;
 
 /**
@@ -17,8 +18,10 @@ public class ConstantPool {
 	public ConstantPool(Reader byteReader, int size) {
 		this.items = new ConstantPoolItem[size];
 		this.reader = byteReader;
-		for (currentIndex = 0; currentIndex < items.length; currentIndex++) {
+		currentIndex = 0;
+		while(currentIndex < items.length) {
 			items[currentIndex] = parseItem();
+			currentIndex++;
 		}
 
 	}
@@ -32,8 +35,8 @@ public class ConstantPool {
 
 		byte peekByte = reader.peekByte();
 		
-		
-		switch (ConstantPoolItem.Tag.getTag(peekByte)) {
+		Tag tag = ConstantPoolItem.Tag.getTag(peekByte);
+		switch (tag) {
 		
 		case CLASS:
 			return new ConstantPoolClass(this);
@@ -60,10 +63,9 @@ public class ConstantPool {
 		case INVOKEDYNAMIC:
 			return new ConstantPoolInvokedDynamic(this);
 		case METHODTYPE: 
-			return new ConstantPoolMethodType(this);
-			
+			return new ConstantPoolMethodType(this);			
 		default:
-			System.out.println("lamo neznam");
+			System.out.println("Neznam "+tag);
 			break;
 		}
 
@@ -76,7 +78,16 @@ public class ConstantPool {
 	public ConstantPoolItem[] getItems() {
 		return items;
 	}
-
+	
+	
+	
+	public <T extends ConstantPoolItem> T getItem(int i,Class<T> type) {		
+		return type.cast(getItem(i));		
+	}
+	
+	public ConstantPoolItem getItem(int i) {
+		return items[i-1];
+	}
 	
 	
 }

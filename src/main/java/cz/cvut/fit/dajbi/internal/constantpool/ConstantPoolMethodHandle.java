@@ -19,7 +19,7 @@ public class ConstantPoolMethodHandle extends ConstantPoolItem {
 	}
 	
 	public ConstantPoolMethodRef getMethodRef() {
-		return (ConstantPoolMethodRef) constantPool.items[referenceIndex];
+		return  constantPool.getItem(referenceIndex,ConstantPoolMethodRef.class);
 	}
 
 }
