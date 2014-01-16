@@ -44,4 +44,96 @@ public class CodeAttribute extends Attribute {
 
 	}
 
+
+
+	/**
+	 * @return the maxStack
+	 */
+	public short getMaxStack() {
+		return maxStack;
+	}
+
+
+
+	/**
+	 * @param maxStack the maxStack to set
+	 */
+	public void setMaxStack(short maxStack) {
+		this.maxStack = maxStack;
+	}
+
+
+
+	/**
+	 * @return the maxLocals
+	 */
+	public short getMaxLocals() {
+		return maxLocals;
+	}
+
+
+
+	/**
+	 * @param maxLocals the maxLocals to set
+	 */
+	public void setMaxLocals(short maxLocals) {
+		this.maxLocals = maxLocals;
+	}
+
+
+
+	/**
+	 * @return the code
+	 */
+	public byte[] getCode() {
+		return code;
+	}
+
+
+
+	/**
+	 * @param code the code to set
+	 */
+	public void setCode(byte[] code) {
+		this.code = code;
+	}
+
+
+
+	/**
+	 * @return the attributesCount
+	 */
+	public short getAttributesCount() {
+		return attributesCount;
+	}
+
+
+
+	/**
+	 * @param attributesCount the attributesCount to set
+	 */
+	public void setAttributesCount(short attributesCount) {
+		this.attributesCount = attributesCount;
+	}
+
+
+
+	/**
+	 * @return the attributes
+	 */
+	public Attribute[] getAttributes() {
+		return attributes;
+	}
+
+
+
+	/**
+	 * @param attributes the attributes to set
+	 */
+	public void setAttributes(Attribute[] attributes) {
+		this.attributes = attributes;
+	}
+	
+	
+
 }

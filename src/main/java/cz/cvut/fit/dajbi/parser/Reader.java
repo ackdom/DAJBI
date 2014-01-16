@@ -12,6 +12,10 @@ public class Reader {
 		this.bytes = byteArray;
 	}
 	
+	public boolean hasNext() {
+		return index <= bytes.length;
+	}
+	
 	public byte peekByte() {
 		return peekByte(0);
 	}

@@ -22,6 +22,16 @@ public class ClassFile {
 	Attribute[] attributes;
 	
 	
+	public Method getMain() {
+		for(Method m : methods) {
+			if(m.getName().equalsIgnoreCase("main")) {
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	
 	
 	/**
 	 * @return the minorVersion
