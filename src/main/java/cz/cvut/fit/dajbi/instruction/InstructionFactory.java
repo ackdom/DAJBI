@@ -6,6 +6,12 @@ import cz.cvut.fit.dajbi.instruction.invoke.RETURN;
 import cz.cvut.fit.dajbi.instruction.load.ALOAD;
 import cz.cvut.fit.dajbi.instruction.load.ILOAD;
 import cz.cvut.fit.dajbi.instruction.stack.BIPUSH;
+import cz.cvut.fit.dajbi.instruction.stack.DUP;
+import cz.cvut.fit.dajbi.instruction.stack.DUPX1;
+import cz.cvut.fit.dajbi.instruction.stack.ICONST;
+import cz.cvut.fit.dajbi.instruction.stack.LDC;
+import cz.cvut.fit.dajbi.instruction.stack.POP;
+import cz.cvut.fit.dajbi.instruction.stack.SIPUSH;
 import cz.cvut.fit.dajbi.instruction.store.ISTORE;
 import cz.cvut.fit.dajbi.instruction.store.PUTSTATIC;
 import cz.cvut.fit.dajbi.stack.Frame;
@@ -26,6 +32,27 @@ public class InstructionFactory {
 		// Stack
 		case bipush:
 			return new BIPUSH(f);
+		case sipush:
+			return new SIPUSH(f);
+		case iconst_m1:
+		case iconst_0:
+		case iconst_1:
+		case iconst_2:
+		case iconst_3:
+		case iconst_4:
+		case iconst_5:
+			return new ICONST(f, instruction.getValue() - Instructions.iconst_0.getValue() );
+		case pop:
+			return new POP(f);
+		case dup:
+			return new DUP(f);
+		case dup_x1:
+			return new DUPX1(f);			
+		case ldc:
+			return new LDC(f,false);
+		case ldc2_w:
+		case ldc_w:
+			return new LDC(f,true);
 		
 		// Calls & Returns 	
 		case invokestatic:
@@ -34,6 +61,7 @@ public class InstructionFactory {
 			return new RETURN(f);
 			
 		// Locals
+			
 			
 		// Store
 		case istore:

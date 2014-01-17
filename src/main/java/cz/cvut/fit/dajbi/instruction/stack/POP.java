@@ -1,14 +1,13 @@
-package cz.cvut.fit.dajbi.instruction.invoke;
+package cz.cvut.fit.dajbi.instruction.stack;
 
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.stack.Frame;
 
-public class RETURN extends Instruction {
+public class POP extends Instruction {
 
-	
-
-	public RETURN(Frame f) {
+	public POP(Frame f) {
 		super(f);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override

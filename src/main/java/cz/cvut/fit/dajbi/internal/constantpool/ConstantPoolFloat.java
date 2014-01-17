@@ -17,5 +17,11 @@ public class ConstantPoolFloat extends ConstantPoolItem {
 	
 	}
 	
+	@Override
+	public Object valueForLDC() {
+		// TODO Auto-generated method stub
+		return value;
+	}
+	
 
 }

@@ -8,6 +8,8 @@ import cz.cvut.fit.dajbi.parser.ClassFileReader;
 
 public class Field {
 	
+	
+	
 	short accessFlags;
 	short nameIndex;
 	short descriptorIndex;
@@ -34,6 +36,10 @@ public class Field {
 		}
 		
 			
+	}
+	
+	public boolean hasFlag(int flag) {
+		return (flag & accessFlags) > 0 ? true : false;
 	}
 	
 	

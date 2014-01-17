@@ -17,5 +17,11 @@ public class ConstantPoolLong extends ConstantPoolItem {
 		constantPool.currentIndex++;
 
 	}
+	
+	@Override
+	public Object valueForLDC() {
+		// TODO Auto-generated method stub
+		return value;
+	}
 
 }

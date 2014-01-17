@@ -18,5 +18,10 @@ public class ConstantPoolDouble extends ConstantPoolItem {
 		constantPool.currentIndex++;
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public Object valueForLDC() {
+		return value;
+	}
 
 }

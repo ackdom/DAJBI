@@ -18,6 +18,7 @@ public class INVOKESTATIC extends Instruction {
 	@Override
 	public void execute() {
 		ConstantPoolMethodRef item = frame.getClassFile().getConstantPool().getItem(frame.getReader().readShort(), ConstantPoolMethodRef.class);
+		
 	}
 
 }

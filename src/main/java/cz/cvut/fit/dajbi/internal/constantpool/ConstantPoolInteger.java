@@ -13,5 +13,11 @@ public class ConstantPoolInteger extends ConstantPoolItem {
 		DAJBI.logger.trace(constantPool.currentIndex+" Integer with = "+value);
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public Object valueForLDC() {
+		// TODO Auto-generated method stub
+		return value;
+	}
 
 }

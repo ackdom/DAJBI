@@ -42,6 +42,8 @@ public class ConstantPool {
 			return new ConstantPoolClass(this);
 		case UTF8:
 			return new ConstantPoolUTF8(this);
+		case STRING:
+			return new ConstantPoolString(this);
 		case METHODREF:
 			return new ConstantPoolMethodRef(this);			
 		case FIELDREF:

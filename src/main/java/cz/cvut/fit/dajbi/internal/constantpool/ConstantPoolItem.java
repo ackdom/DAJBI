@@ -1,10 +1,17 @@
 package cz.cvut.fit.dajbi.internal.constantpool;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 public class ConstantPoolItem {
 	
 	
 	protected ConstantPool constantPool;
 	short tag;
+	
+	
+	public Object valueForLDC() {
+		throw new NotImplementedException();
+	}
 
 
 	/**

@@ -8,6 +8,7 @@ public class SampleClass01 {
 	short myShort = 3;
 	float myFloat = (float) 2e-3;
 	long myLong = 2023123;
+	//static MyObject mujmuj;
 	
 	private int result(int i) {
 		int j = 10;
@@ -16,6 +17,8 @@ public class SampleClass01 {
 	
 	public static void main(String[] args) {
 		
+		MyObject muj = new MyObject(); 
+		//int[] arr = new int[5];
 		int j = 25;
 		int i = 10;
 		int c = sum(j);
