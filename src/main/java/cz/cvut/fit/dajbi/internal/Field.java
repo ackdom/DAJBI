@@ -13,8 +13,7 @@ public class Field {
 	short descriptorIndex;
 	short attributesCount;
 	Attribute[] attributes;
-	ClassFileReader classFileReader;
-	
+	ClassFileReader classFileReader;	
 	Object value;
 
 	public Field(ClassFileReader classFileReader) {
@@ -38,12 +37,34 @@ public class Field {
 	}
 	
 	
+	
+	
 	public String getName() {
 		return classFileReader.getClassFile().getConstantPool().getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
 	
 	public String getDescription() {
 		return classFileReader.getClassFile().getConstantPool().getItem(descriptorIndex, ConstantPoolUTF8.class).getTitle();
+	}
+
+
+
+
+	/**
+	 * @return the value
+	 */
+	public Object getValue() {
+		return value;
+	}
+
+
+
+
+	/**
+	 * @param value the value to set
+	 */
+	public void setValue(Object value) {
+		this.value = value;
 	}
 
 }

@@ -2,7 +2,7 @@ package cz.cvut.fit.dajbi.testclasses;
 
 public class SampleClass01 {
 
-	int myValue = 25;
+	static int myValue = 42;
 	boolean myBool = false;
 	double myDouble = 3.1456789;
 	short myShort = 3;

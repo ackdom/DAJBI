@@ -2,6 +2,9 @@ package cz.cvut.fit.dajbi.internal;
 
 import cz.cvut.fit.dajbi.internal.attributes.Attribute;
 import cz.cvut.fit.dajbi.internal.constantpool.ConstantPool;
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPoolClass;
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPoolFieldRef;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 
 public class ClassFile {
 
@@ -26,6 +29,34 @@ public class ClassFile {
 		for(Method m : methods) {
 			if(m.getName().equalsIgnoreCase("main")) {
 				return m;
+			}
+		}
+		return null;
+	}
+	
+	public Method getClinit() {
+		for(Method m : methods) {
+			if(m.getName().equalsIgnoreCase("<clinit>")) {
+				return m;
+			}
+		}
+		return null;
+	}
+	
+	public Field getField(int index) {
+		ClassFile file = this;
+		while(!(constantPool.getItem(index) instanceof ConstantPoolFieldRef)) {
+			file = ClassResolver.resolveClass(file.constantPool.getItem(file.superClass, ConstantPoolClass.class).getName());
+		}
+		
+		ConstantPoolFieldRef fieldRef = file.constantPool.getItem(index, ConstantPoolFieldRef.class);
+		return getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptorIndex());
+	}
+	
+	public Field getField(String name, String desr) {
+		for(Field f : fields) {
+			if(f.getDescription().equals(desr) && f.getName().equals(name)) {
+				return f;
 			}
 		}
 		return null;

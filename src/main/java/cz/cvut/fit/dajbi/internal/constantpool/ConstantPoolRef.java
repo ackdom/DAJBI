@@ -24,6 +24,14 @@ public class ConstantPoolRef extends ConstantPoolItem {
 	public short getClassIndex() {
 		return classIndex;
 	}
+	
+	public ConstantPoolClass getClassRef() {
+		return constantPool.getItem(getClassIndex(), ConstantPoolClass.class);
+	}
+	
+	public ConstantPoolNameAndType getNameAndType() {
+		return constantPool.getItem(getNameAndTypeIndex(), ConstantPoolNameAndType.class);
+	}
 
 	/**
 	 * @return the nameAndTypeIndex

@@ -13,7 +13,7 @@ public class Reader {
 	}
 	
 	public boolean hasNext() {
-		return index <= bytes.length;
+		return index < bytes.length;
 	}
 	
 	public byte peekByte() {
@@ -26,6 +26,10 @@ public class Reader {
 	
 	public byte readByte() {
 		return bytes[index++];
+	}
+	
+	public int readByteToUInt() {
+		return 0xff & readByte();
 	}
 	
 	public short readShort() {
