@@ -18,6 +18,7 @@ public class SampleClass01 {
 	public static void main(String[] args) {
 		
 		MyObject muj = new MyObject(); 
+		muj.ahoj = 33;
 		//int[] arr = new int[5];
 		int j = 25;
 		int i = 10;

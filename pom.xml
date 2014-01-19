@@ -7,6 +7,13 @@
 	<name>DAJBI</name>
 	<description>Dumb Almost Java Bytecode Interpreter</description>
 
+	<repositories>
+		<repository>
+			<!-- DO NOT set id to "local" because it is reserved by Maven -->
+			<id>lib</id>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -23,6 +30,11 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.stefanmuenchow</groupId>
+			<artifactId>generic-arithmetic</artifactId>
+			<version>1.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

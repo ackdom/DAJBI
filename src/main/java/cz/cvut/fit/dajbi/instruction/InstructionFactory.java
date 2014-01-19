@@ -3,8 +3,7 @@ package cz.cvut.fit.dajbi.instruction;
 import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKESTATIC;
 import cz.cvut.fit.dajbi.instruction.invoke.RETURN;
-import cz.cvut.fit.dajbi.instruction.load.ALOAD;
-import cz.cvut.fit.dajbi.instruction.load.ILOAD;
+import cz.cvut.fit.dajbi.instruction.load.LOAD;
 import cz.cvut.fit.dajbi.instruction.stack.BIPUSH;
 import cz.cvut.fit.dajbi.instruction.stack.DUP;
 import cz.cvut.fit.dajbi.instruction.stack.DUPX1;
@@ -12,8 +11,8 @@ import cz.cvut.fit.dajbi.instruction.stack.ICONST;
 import cz.cvut.fit.dajbi.instruction.stack.LDC;
 import cz.cvut.fit.dajbi.instruction.stack.POP;
 import cz.cvut.fit.dajbi.instruction.stack.SIPUSH;
-import cz.cvut.fit.dajbi.instruction.store.ISTORE;
 import cz.cvut.fit.dajbi.instruction.store.PUTSTATIC;
+import cz.cvut.fit.dajbi.instruction.store.STORE;
 import cz.cvut.fit.dajbi.stack.Frame;
 
 public class InstructionFactory {
@@ -65,25 +64,80 @@ public class InstructionFactory {
 			
 		// Store
 		case istore:
-			return new ISTORE(f);
+		case dstore:
+		case astore:
+		case lstore:
+		case fstore:
+			return new STORE(f);
 		case istore_0:
 		case istore_1:
 		case istore_2:
 		case istore_3:
-			return new ISTORE(f,instruction.getValue()-Instructions.istore_0.getValue());
+			return new STORE(f,instruction.getValue()-Instructions.istore_0.getValue());
 			
+		case dstore_0:
+		case dstore_1:
+		case dstore_2:
+		case dstore_3:
+			return new STORE(f,instruction.getValue()-Instructions.dstore_0.getValue());
+
+		case fstore_0:
+		case fstore_1:
+		case fstore_2:
+		case fstore_3:
+			return new STORE(f,instruction.getValue()-Instructions.fstore_0.getValue());
+		
+		case lstore_0:
+		case lstore_1:
+		case lstore_2:
+		case lstore_3:
+			return new STORE(f,instruction.getValue()-Instructions.lstore_0.getValue());
+		case astore_0:
+		case astore_1:
+		case astore_2:
+		case astore_3:
+			return new STORE(f,instruction.getValue()-Instructions.astore_0.getValue());
+
+		
 		case putstatic:
 			return new PUTSTATIC(f);
 		// Load
 		case iload:
-			return new ILOAD(f);
+		case aload:
+		case fload:
+		case lload:
+		case dload:
+			return new LOAD(f);
 		case iload_0:
 		case iload_1:
 		case iload_2:
 		case iload_3:
-			return new ILOAD(f,instruction.getValue()-Instructions.iload_0.getValue());
-		case aload:
-			return new ALOAD(f);
+			return new LOAD(f,instruction.getValue()-Instructions.iload_0.getValue());
+		case dload_0:
+		case dload_1:
+		case dload_2:
+		case dload_3:
+			return new LOAD(f,instruction.getValue()-Instructions.dload_0.getValue());
+				
+		case fload_0:
+		case fload_1:
+		case fload_2:
+		case fload_3:
+			return new LOAD(f,instruction.getValue()-Instructions.fload_0.getValue());
+			
+			
+		case lload_0:
+		case lload_1:
+		case lload_2:
+		case lload_3:
+			return new LOAD(f,instruction.getValue()-Instructions.lload_0.getValue());
+			
+			
+		case aload_0:
+		case aload_1:
+		case aload_2:
+		case aload_3:
+			return new LOAD(f,instruction.getValue()-Instructions.aload_0.getValue());
 			
 			
 
