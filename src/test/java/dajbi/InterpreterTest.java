@@ -11,7 +11,6 @@ import cz.cvut.fit.dajbi.Interpreter;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.VMSettings;
 import cz.cvut.fit.dajbi.methodarea.ClassResolver;
-import cz.cvut.fit.dajbi.parser.ClassFileReader;
 
 public class InterpreterTest {
 

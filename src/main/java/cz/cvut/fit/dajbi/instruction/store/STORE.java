@@ -9,7 +9,7 @@ public class STORE extends Instruction {
 
 	public STORE(Frame f) {
 		super(f);
-		index = (int) frame.getReader().readByte();
+		index = (int) frame.getReader().readByteToUInt();
 	}
 
 	public STORE(Frame f, int i) {

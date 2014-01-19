@@ -4,6 +4,9 @@ import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKESTATIC;
 import cz.cvut.fit.dajbi.instruction.invoke.RETURN;
 import cz.cvut.fit.dajbi.instruction.load.LOAD;
+import cz.cvut.fit.dajbi.instruction.math.ADD;
+import cz.cvut.fit.dajbi.instruction.math.MUL;
+import cz.cvut.fit.dajbi.instruction.math.SUB;
 import cz.cvut.fit.dajbi.instruction.stack.BIPUSH;
 import cz.cvut.fit.dajbi.instruction.stack.DUP;
 import cz.cvut.fit.dajbi.instruction.stack.DUPX1;
@@ -138,7 +141,15 @@ public class InstructionFactory {
 		case aload_2:
 		case aload_3:
 			return new LOAD(f,instruction.getValue()-Instructions.aload_0.getValue());
+		
 			
+		// MATH
+		case isub:
+			return new SUB<Integer>(f);
+		case iadd:
+			return new ADD<Integer>(f);
+		case imul:
+			return new MUL<Integer>(f);
 			
 
 		default:
