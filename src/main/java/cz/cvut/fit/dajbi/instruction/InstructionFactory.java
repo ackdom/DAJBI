@@ -144,12 +144,37 @@ public class InstructionFactory {
 		
 			
 		// MATH
+		// int	
 		case isub:
 			return new SUB<Integer>(f);
 		case iadd:
 			return new ADD<Integer>(f);
 		case imul:
 			return new MUL<Integer>(f);
+		//double
+		case dsub:
+			return new SUB<Double>(f);
+		case dadd:
+			return new ADD<Double>(f);
+		case dmul:
+			return new MUL<Double>(f);
+		//float
+		case fsub:
+			return new SUB<Float>(f);
+		case fadd:
+			return new ADD<Float>(f);
+		case fmul:
+			return new MUL<Float>(f);
+		//long
+		case lsub:
+			return new SUB<Long>(f);
+		case ladd:
+			return new ADD<Long>(f);
+		case lmul:
+			return new MUL<Long>(f);
+			
+			
+			
 			
 
 		default:
