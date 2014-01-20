@@ -15,6 +15,7 @@ public class HeapHandle {
 		classFile = cf;
 		instanceData = new HashMap<String, Object>();
 	}
+	
 
 	/**
 	 * @return the instanceData
@@ -28,6 +29,22 @@ public class HeapHandle {
 	 */
 	public void setInstanceData(Map<String, Object> instanceData) {
 		this.instanceData = instanceData;
+	}
+
+
+	/**
+	 * @return the classFile
+	 */
+	public ClassFile getClassFile() {
+		return classFile;
+	}
+
+
+	/**
+	 * @param classFile the classFile to set
+	 */
+	public void setClassFile(ClassFile classFile) {
+		this.classFile = classFile;
 	}
 	
 	

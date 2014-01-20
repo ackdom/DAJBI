@@ -1,0 +1,23 @@
+package cz.cvut.fit.dajbi.testclasses;
+
+public class SampleClass02 {
+
+	public static void main(String[] args) {
+		int j = 25;
+		//int i = 15;
+		//int c = sum(j,i);
+		
+		for(int i = 0; i < 10; i++) {
+		}
+		
+		MyObject muj = new MyObject();
+		int c = muj.calc(j);
+		
+		return;
+	}
+	
+	public synchronized static int sum(int j, int i) {
+		return j+i;
+	}
+
+}

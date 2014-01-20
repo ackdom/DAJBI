@@ -19,14 +19,22 @@ public class ClassResolver {
 		ClassFileReader cfr = new ClassFileReader(str);
 		ClassFile read = cfr.read();
 		Method clinit = read.getClinit();
+		classFiles.put(str, read);
 		if (clinit != null) {
 			Interpreter inter = new Interpreter();
 			inter.run(read, clinit);
 		}
 
-		classFiles.put(str, read);
 		return read;
 
+	}
+	
+	public static ClassFile resolveWithLookup(String str) {
+		if (classFiles.containsKey(str)) {
+			return classFiles.get(str);
+		}
+		
+		return resolveClass(ClassLoader.classLookUp(str));
 	}
 
 }

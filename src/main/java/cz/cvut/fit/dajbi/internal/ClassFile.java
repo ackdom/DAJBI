@@ -34,6 +34,15 @@ public class ClassFile {
 		return null;
 	}
 	
+	public Method getMethod(String name, String descriptor) {
+		for(Method m : methods) {
+			if(m.getName().equals(name) && m.getDescription().equals(descriptor)) {
+				return m;
+			}
+		}
+		return null;
+	}
+	
 	public Method getClinit() {
 		for(Method m : methods) {
 			if(m.getName().equalsIgnoreCase("<clinit>")) {
@@ -50,7 +59,7 @@ public class ClassFile {
 		}
 		
 		ConstantPoolFieldRef fieldRef = file.constantPool.getItem(index, ConstantPoolFieldRef.class);
-		return getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptorIndex());
+		return getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptor());
 	}
 	
 	public Field getField(String name, String desr) {

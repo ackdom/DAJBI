@@ -5,7 +5,12 @@ import cz.cvut.fit.dajbi.stack.Frame;
 
 public class RETURN extends Instruction {
 
+	boolean retValue = false;
 	
+	public RETURN(Frame f, boolean ret) {
+		super(f);
+		retValue = ret;
+	}
 
 	public RETURN(Frame f) {
 		super(f);
@@ -13,7 +18,10 @@ public class RETURN extends Instruction {
 
 	@Override
 	public void execute() {
-		frame.pop();
+		if(retValue && frame.top() != null) {
+			frame.getInvoker().push(frame.pop());
+		}
+		frame.getInterpreter().getStack().pop();
 	}
 
 }

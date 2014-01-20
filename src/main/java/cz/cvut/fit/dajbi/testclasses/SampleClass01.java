@@ -25,6 +25,7 @@ public class SampleClass01 {
 		int c = sum(j);
 		return;
 		
+		
 		//SampleClass01 sample = new SampleClass01();
 		//sample.result(25);
 	}

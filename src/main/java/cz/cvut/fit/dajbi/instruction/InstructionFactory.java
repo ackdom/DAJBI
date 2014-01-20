@@ -1,10 +1,24 @@
 package cz.cvut.fit.dajbi.instruction;
 
+
+
 import cz.cvut.fit.dajbi.DAJBI;
+import cz.cvut.fit.dajbi.instruction.alloc.NEW;
+import cz.cvut.fit.dajbi.instruction.conversion.I2B;
+import cz.cvut.fit.dajbi.instruction.conversion.I2C;
+import cz.cvut.fit.dajbi.instruction.conversion.I2D;
+import cz.cvut.fit.dajbi.instruction.conversion.I2F;
+import cz.cvut.fit.dajbi.instruction.conversion.I2L;
+import cz.cvut.fit.dajbi.instruction.conversion.I2S;
+import cz.cvut.fit.dajbi.instruction.conversion.L2D;
+import cz.cvut.fit.dajbi.instruction.conversion.L2F;
+import cz.cvut.fit.dajbi.instruction.invoke.INVOKESPECIAL;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKESTATIC;
+import cz.cvut.fit.dajbi.instruction.invoke.INVOKEVIRTUAL;
 import cz.cvut.fit.dajbi.instruction.invoke.RETURN;
 import cz.cvut.fit.dajbi.instruction.load.LOAD;
 import cz.cvut.fit.dajbi.instruction.math.ADD;
+import cz.cvut.fit.dajbi.instruction.math.IINC;
 import cz.cvut.fit.dajbi.instruction.math.MUL;
 import cz.cvut.fit.dajbi.instruction.math.SUB;
 import cz.cvut.fit.dajbi.instruction.stack.BIPUSH;
@@ -59,8 +73,47 @@ public class InstructionFactory {
 		// Calls & Returns 	
 		case invokestatic:
 			return new INVOKESTATIC(f);
+		case invokevirtual:
+			return new INVOKEVIRTUAL(f);
+		case invokespecial:
+			return new INVOKESPECIAL(f);
+		
+		case ireturn:
+		case lreturn:
+		case dreturn:
+		case areturn:
+		case freturn:
+			return new RETURN(f,true);
 		case _return:
+		
 			return new RETURN(f);
+			
+			//conversion
+		case i2b:
+			return new I2B(f);
+		case i2c:
+			return new I2C(f);
+		case i2d:
+			return new I2D(f);
+		case i2f:
+			return new I2F(f);
+		case i2l:
+			return new I2L(f);
+		case i2s:
+			return new I2S(f);
+			
+		case l2d:
+			return new L2D(f);
+		case l2f:
+			return new L2F(f);
+		case l2i:
+			return new L2I(f);
+			
+			
+		//Alloc 
+			
+		case _new:
+			return new NEW(f);
 			
 		// Locals
 			
@@ -151,6 +204,8 @@ public class InstructionFactory {
 			return new ADD<Integer>(f);
 		case imul:
 			return new MUL<Integer>(f);
+		case iinc:
+			return new IINC(f);
 		//double
 		case dsub:
 			return new SUB<Double>(f);
@@ -172,6 +227,7 @@ public class InstructionFactory {
 			return new ADD<Long>(f);
 		case lmul:
 			return new MUL<Long>(f);
+			
 			
 			
 			

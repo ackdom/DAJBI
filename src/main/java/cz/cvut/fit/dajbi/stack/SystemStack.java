@@ -26,11 +26,14 @@ public class SystemStack extends Stack<Frame> {
     	 Frame newFrame = newFrame();
     	 newFrame.classFile = cf;
     	 newFrame.reader = new Reader(m.getCodeAttribute().getCode());
+    	 
     	 return newFrame;
      }
      
      public Frame newFrame() {
-    	 push(new Frame());
+    	 Frame frame = new Frame();
+    	 frame.setInvoker(top());
+    	 push(frame);
     	 return top();    	 
      }
      

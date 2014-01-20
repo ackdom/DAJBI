@@ -27,7 +27,7 @@ public class InterpreterTest {
 	@Test
 	public void test() {
 		
-		ClassFile mainclass = ClassResolver.resolveClass(VMSettings.TEST_CLASSES+"SampleClass01.class");		
+		ClassFile mainclass = ClassResolver.resolveClass(VMSettings.TEST_CLASSES+"SampleClass02.class");		
 		Interpreter inter = new Interpreter();		
 		inter.run(mainclass);	
 	}

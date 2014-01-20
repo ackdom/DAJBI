@@ -1,6 +1,7 @@
 package cz.cvut.fit.dajbi.stack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Stack<T extends Object> {
 
@@ -11,6 +12,9 @@ public class Stack<T extends Object> {
 	}
 
 	public T top() {
+		if(isEmpty()) {
+			return null;
+		}
 		return stack.get(stack.size() - 1);
 	}
 
@@ -31,6 +35,13 @@ public class Stack<T extends Object> {
 	
 	public boolean isEmpty() {
 		return stack.size() == 0 ? true : false;
+	}
+	
+	public List<T> popArgList(int count) {
+		List<T> subList = stack.subList(size()-count, size());
+		List<T> args = new ArrayList<T>(subList);
+		subList.clear();
+		return args;		
 	}
 
 }

@@ -1,5 +1,8 @@
 package cz.cvut.fit.dajbi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.instruction.InstructionFactory;
 import cz.cvut.fit.dajbi.internal.ClassFile;
@@ -27,9 +30,20 @@ public class Interpreter {
 	}
 
 	public void call(ClassFile cf, Method method) {
+		call(cf, method, new ArrayList<Object>());
+	}
+	
+	public void call(ClassFile cf, Method method, List<Object> args) {
 		DAJBI.logger.error("Called method "+method.getName()+" "+method.getDescription());
+		if(method.getCodeAttribute() == null) {
+			return;
+		}
 		Frame newFrame = stack.newFrame(cf, method);
 		newFrame.setInterpreter(this);
+		for(int i = 0; i < args.size(); i++) {
+			newFrame.setLocal(i, args.get(i));
+		}
+		
 	}
 
 	private void runloop() {
@@ -47,8 +61,8 @@ public class Interpreter {
 
 			Instruction byCode = InstructionFactory.byCode(top.getReader()
 					.readByteToUInt(), top);
-			byCode.execute();
 			System.out.println("Instrukce "+byCode.getClass().getSimpleName());
+			byCode.execute();
 
 		}
 		DAJBI.logger.debug("Runloop ended");

@@ -59,4 +59,35 @@ public class Method {
 		return codeAttribute;
 	}
 
+
+
+
+	/**
+	 * @return the accessFlags
+	 */
+	public short getAccessFlags() {
+		return accessFlags;
+	}
+
+
+
+
+	/**
+	 * @return the attributesCount
+	 */
+	public int getAttributesCount() {
+		return getMethodArgumentCount(getDescription());
+	}
+	
+	public static int getMethodArgumentCount(String desc) {
+		 int beginIndex = desc.indexOf('(') + 1;
+		 int endIndex = desc.lastIndexOf(')');
+		 String x0 = desc.substring(beginIndex, endIndex);//Extract the part related to the arguments
+		 String x1 = x0.replace("[", "");//remove the [ symbols for arrays to avoid confusion.
+		 String x2 = x1.replace(";", "; ");//add an extra space after each semicolon.
+		 String x3 = x2.replaceAll("L\\S+;", "L");//replace all the substrings starting with L, ending with ; and containing non whitespace characters inbetween with L.
+		 String x4 = x3.replace(" ", "");//remove the previously inserted spaces.
+		 return x4.length();//count the number of elements left.
+		}
+
 }

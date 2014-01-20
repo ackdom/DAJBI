@@ -22,8 +22,12 @@ public class Heap {
 		counter = 1;
 	}
 	
-	public Heap getInstance() {
+	public static Heap getInstance() {
 		return instance;
+	}
+	
+	public HeapHandle getObject(long id) {
+		return objectPool.get(id);
 	}
 	
 	

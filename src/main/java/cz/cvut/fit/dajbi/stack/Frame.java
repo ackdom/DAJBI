@@ -8,23 +8,23 @@ import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.parser.Reader;
 
 public class Frame extends Stack<Object> {
-	
-	
+
 	Interpreter interpreter;
 	SortedMap<Integer, Object> localVariables;
 	ClassFile classFile;
-	Reader reader;	
-	
+	Reader reader;
+	Frame invoker;
+
 	public Frame() {
 		super();
-		localVariables = new TreeMap<Integer, Object>();	
+		localVariables = new TreeMap<Integer, Object>();
 		localVariables.clear();
 	}
-	
+
 	public Object getLocal(int i) {
 		return localVariables.get(i);
 	}
-	
+
 	public void setLocal(int i, Object o) {
 		localVariables.put(i, o);
 	}
@@ -37,7 +37,8 @@ public class Frame extends Stack<Object> {
 	}
 
 	/**
-	 * @param classFile the classFile to set
+	 * @param classFile
+	 *            the classFile to set
 	 */
 	public void setClassFile(ClassFile classFile) {
 		this.classFile = classFile;
@@ -51,7 +52,8 @@ public class Frame extends Stack<Object> {
 	}
 
 	/**
-	 * @param reader the reader to set
+	 * @param reader
+	 *            the reader to set
 	 */
 	public void setReader(Reader reader) {
 		this.reader = reader;
@@ -65,12 +67,25 @@ public class Frame extends Stack<Object> {
 	}
 
 	/**
-	 * @param interpreter the interpreter to set
+	 * @param interpreter
+	 *            the interpreter to set
 	 */
 	public void setInterpreter(Interpreter interpreter) {
 		this.interpreter = interpreter;
 	}
-	
-	
+
+	/**
+	 * @return the invoker
+	 */
+	public Frame getInvoker() {
+		return invoker;
+	}
+
+	/**
+	 * @param invoker the invoker to set
+	 */
+	public void setInvoker(Frame invoker) {
+		this.invoker = invoker;
+	}
 
 }

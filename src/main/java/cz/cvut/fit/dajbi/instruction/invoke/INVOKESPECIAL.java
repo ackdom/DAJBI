@@ -9,26 +9,28 @@ import cz.cvut.fit.dajbi.internal.constantpool.ConstantPoolMethodRef;
 import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 import cz.cvut.fit.dajbi.stack.Frame;
 
-public class INVOKESTATIC extends Instruction {
+public class INVOKESPECIAL extends Instruction {
 
-	
-
-	public INVOKESTATIC(Frame f) {
+	public INVOKESPECIAL(Frame f) {
 		super(f);
-		
-		
+
 	}
 
 	@Override
 	public void execute() {
-		ConstantPoolMethodRef item = frame.getClassFile().getConstantPool().getItem(frame.getReader().readShort(), ConstantPoolMethodRef.class);
-		ClassFile cf = ClassResolver.resolveWithLookup(item.getClassRef().getName());
-		Method method = cf.getMethod(item.getNameAndType().getName(), item.getNameAndType().getDescriptor());
+		ConstantPoolMethodRef item = frame
+				.getClassFile()
+				.getConstantPool()
+				.getItem(frame.getReader().readShort(),
+						ConstantPoolMethodRef.class);
+		
+		ClassFile cf = ClassResolver.resolveWithLookup(item.getClassRef()
+				.getName());
+		Method method = cf.getMethod(item.getNameAndType().getName(), item
+				.getNameAndType().getDescriptor());
 		int attributesCount = method.getAttributesCount();
-		List<Object> pop = frame.popArgList(attributesCount);
+		List<Object> pop = frame.popArgList(attributesCount + 1);
 		frame.getInterpreter().call(cf, method, pop);
-		
-		
 	}
 
 }

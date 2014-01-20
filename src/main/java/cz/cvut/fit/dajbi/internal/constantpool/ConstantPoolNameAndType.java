@@ -20,7 +20,7 @@ public class ConstantPoolNameAndType extends ConstantPoolItem {
 		return constantPool.getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
 	
-	public String getDescriptorIndex() {
+	public String getDescriptor() {
 		return constantPool.getItem(descriptorInex, ConstantPoolUTF8.class).getTitle();
 	}
 }
