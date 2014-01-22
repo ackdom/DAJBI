@@ -14,7 +14,9 @@ public class GETSTATIC extends Instruction {
 	@Override
 	public void execute() {
 		short index = frame.getReader().readShort();
+		
 		Field field = frame.getClassFile().getField(index);
+		
 		frame.push(field.getValue());
 
 	}

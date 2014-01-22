@@ -32,16 +32,37 @@ public class Interpreter {
 	public void call(ClassFile cf, Method method) {
 		call(cf, method, new ArrayList<Object>());
 	}
-	
+
 	public void call(ClassFile cf, Method method, List<Object> args) {
-		DAJBI.logger.error("Called method "+method.getName()+" "+method.getDescription());
-		if(method.getCodeAttribute() == null) {
+		DAJBI.logger.error("Called method " + method.getName() + " "
+				+ method.getDescription());
+		if (method.getCodeAttribute() == null) {
+
+			callNative(cf, method, args);
 			return;
+
 		}
 		Frame newFrame = stack.newFrame(cf, method);
 		newFrame.setInterpreter(this);
-		for(int i = 0; i < args.size(); i++) {
+		for (int i = 0; i < args.size(); i++) {
 			newFrame.setLocal(i, args.get(i));
+		}
+
+	}
+
+	private void callNative(ClassFile cf, Method method, List<Object> args) {
+
+		Object returnValue = null;
+		if (method.getName().equals("println")) {
+			System.out.println(args.get(1));
+		}
+		if (method.getName().equals("getSecret")) {
+			returnValue = 42;
+		}
+		
+		
+		if(returnValue != null) {
+			stack.top().push(returnValue);
 		}
 		
 	}
@@ -61,7 +82,8 @@ public class Interpreter {
 
 			Instruction byCode = InstructionFactory.byCode(top.getReader()
 					.readByteToUInt(), top);
-			System.out.println("Instrukce "+byCode.getClass().getSimpleName());
+			System.out
+					.println("Instrukce " + byCode.getClass().getSimpleName());
 			byCode.execute();
 
 		}

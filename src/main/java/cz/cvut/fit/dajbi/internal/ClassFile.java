@@ -55,11 +55,12 @@ public class ClassFile {
 	public Field getField(int index) {
 		ClassFile file = this;
 		while(!(constantPool.getItem(index) instanceof ConstantPoolFieldRef)) {
-			file = ClassResolver.resolveClass(file.constantPool.getItem(file.superClass, ConstantPoolClass.class).getName());
+			file = ClassResolver.resolveWithLookup(file.constantPool.getItem(file.superClass, ConstantPoolClass.class).getName());
 		}
 		
-		ConstantPoolFieldRef fieldRef = file.constantPool.getItem(index, ConstantPoolFieldRef.class);
-		return getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptor());
+		ConstantPoolFieldRef fieldRef = file.constantPool.getItem(index, ConstantPoolFieldRef.class);        
+        file = ClassResolver.resolveWithLookup(fieldRef.getClassRef().getName());
+		return file.getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptor());
 	}
 	
 	public Field getField(String name, String desr) {
