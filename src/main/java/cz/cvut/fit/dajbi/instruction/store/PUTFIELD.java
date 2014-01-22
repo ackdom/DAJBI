@@ -1,0 +1,30 @@
+package cz.cvut.fit.dajbi.instruction.store;
+
+import java.util.Map;
+
+import cz.cvut.fit.dajbi.heap.Heap;
+import cz.cvut.fit.dajbi.heap.HeapHandle;
+import cz.cvut.fit.dajbi.instruction.Instruction;
+import cz.cvut.fit.dajbi.internal.Field;
+import cz.cvut.fit.dajbi.stack.Frame;
+
+public class PUTFIELD extends Instruction {
+
+	public PUTFIELD(Frame f) {
+		super(f);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void execute() {
+		short index = frame.getReader().readShort();
+		Field field = frame.getClassFile().getField(index);
+		Object value = frame.pop();
+		Long ref = (Long) frame.pop();
+		
+		HeapHandle object = Heap.getInstance().getObject(ref);
+		Map<String, Object> instanceData = object.getInstanceData();
+		instanceData.put(field.getName(), value);
+	}
+
+}

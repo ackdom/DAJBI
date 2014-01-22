@@ -1,5 +1,6 @@
-package cz.cvut.fit.dajbi.instruction;
+package cz.cvut.fit.dajbi.instruction.conversion;
 
+import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.stack.Frame;
 
 public class L2I extends Instruction {

@@ -22,7 +22,7 @@ public class SampleClass01 {
 		//int[] arr = new int[5];
 		int j = 25;
 		int i = 10;
-		int c = sum(j);
+		int c = muj.calc(10);
 		return;
 		
 		

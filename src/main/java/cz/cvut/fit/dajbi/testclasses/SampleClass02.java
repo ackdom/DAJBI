@@ -8,9 +8,12 @@ public class SampleClass02 {
 		//int c = sum(j,i);
 		
 		for(int i = 0; i < 10; i++) {
+			j = sum(i,j);
 		}
 		
+		
 		MyObject muj = new MyObject();
+		//muj.ahoj = 10;
 		int c = muj.calc(j);
 		
 		return;

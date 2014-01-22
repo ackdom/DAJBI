@@ -4,6 +4,15 @@ package cz.cvut.fit.dajbi.instruction;
 
 import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.instruction.alloc.NEW;
+import cz.cvut.fit.dajbi.instruction.conditions.GOTO;
+import cz.cvut.fit.dajbi.instruction.conditions.GOTOW;
+import cz.cvut.fit.dajbi.instruction.conditions.IF;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.EQStrategy;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.GEStrategy;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.GTStrategy;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.LEStrategy;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.LTStrategy;
+import cz.cvut.fit.dajbi.instruction.conditions.strategy.NEStrategy;
 import cz.cvut.fit.dajbi.instruction.conversion.I2B;
 import cz.cvut.fit.dajbi.instruction.conversion.I2C;
 import cz.cvut.fit.dajbi.instruction.conversion.I2D;
@@ -12,10 +21,14 @@ import cz.cvut.fit.dajbi.instruction.conversion.I2L;
 import cz.cvut.fit.dajbi.instruction.conversion.I2S;
 import cz.cvut.fit.dajbi.instruction.conversion.L2D;
 import cz.cvut.fit.dajbi.instruction.conversion.L2F;
+import cz.cvut.fit.dajbi.instruction.conversion.L2I;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKESPECIAL;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKESTATIC;
 import cz.cvut.fit.dajbi.instruction.invoke.INVOKEVIRTUAL;
+import cz.cvut.fit.dajbi.instruction.invoke.NOP;
 import cz.cvut.fit.dajbi.instruction.invoke.RETURN;
+import cz.cvut.fit.dajbi.instruction.load.GETFIELD;
+import cz.cvut.fit.dajbi.instruction.load.GETSTATIC;
 import cz.cvut.fit.dajbi.instruction.load.LOAD;
 import cz.cvut.fit.dajbi.instruction.math.ADD;
 import cz.cvut.fit.dajbi.instruction.math.IINC;
@@ -28,6 +41,7 @@ import cz.cvut.fit.dajbi.instruction.stack.ICONST;
 import cz.cvut.fit.dajbi.instruction.stack.LDC;
 import cz.cvut.fit.dajbi.instruction.stack.POP;
 import cz.cvut.fit.dajbi.instruction.stack.SIPUSH;
+import cz.cvut.fit.dajbi.instruction.store.PUTFIELD;
 import cz.cvut.fit.dajbi.instruction.store.PUTSTATIC;
 import cz.cvut.fit.dajbi.instruction.store.STORE;
 import cz.cvut.fit.dajbi.stack.Frame;
@@ -157,6 +171,16 @@ public class InstructionFactory {
 		
 		case putstatic:
 			return new PUTSTATIC(f);
+		case getstatic:
+			return new GETSTATIC(f);
+			
+		case putfield:
+			return new PUTFIELD(f);
+		case getfield:
+			return new GETFIELD(f);
+		case nop:
+			return new NOP(f);
+			
 		// Load
 		case iload:
 		case aload:
@@ -229,9 +253,37 @@ public class InstructionFactory {
 			return new MUL<Long>(f);
 			
 			
+		// ifs 
+		case if_icmpeq:
+			return new IF(f,new EQStrategy(),false);
+		case if_icmpne:
+			return new IF(f,new NEStrategy(),false);
+		case if_icmpge:
+			return new IF(f,new GEStrategy(),false);
+		case if_icmpgt:
+			return new IF(f,new GTStrategy(),false);
+		case if_icmple:
+			return new IF(f,new LEStrategy(),false);
+		case if_icmplt:
+			return new IF(f,new LTStrategy(),false);
+		
+		case ifeq:
+			return new IF(f,new EQStrategy(),true);
+		case ifne:
+			return new IF(f,new NEStrategy(),true);
+		case ifge:
+			return new IF(f,new GEStrategy(),true);
+		case ifgt:
+			return new IF(f,new GTStrategy(),true);
+		case ifle:
+			return new IF(f,new LEStrategy(),true);
+		case iflt:
+			return new IF(f,new LTStrategy(),true);	
 			
-			
-			
+		case goto_w:
+			return new GOTOW(f);
+		case _goto:
+			return new GOTO(f);
 
 		default:
 			DAJBI.logger.error("cant find instruction: "+i);

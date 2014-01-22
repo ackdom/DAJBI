@@ -90,4 +90,8 @@ public class Reader {
 
 	}
 
+	public void move(int i) {
+		index += i;		
+	}
+
 }
