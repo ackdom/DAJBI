@@ -11,6 +11,7 @@ public class Heap {
 	
 	private static final Heap instance = new Heap();
 	private long counter;
+	public static final Long NULL =  -1L;
 	
 	private Map<Long,HeapHandle> objectPool;
 	
@@ -29,6 +30,19 @@ public class Heap {
 	public HeapHandle getObject(long id) {
 		return objectPool.get(id);
 	}
+	
+	public Object[] getArray(long id) {
+		return (Object[]) getObject(id).getInstanceData().get("[]");
+	}
+	
+	
+	public long allocArray(ClassFile type, int size) {
+		Object[] obj = new Object[size];
+		HeapHandle handle = new HeapHandle(type);
+		Map<String, Object> instanceData = handle.getInstanceData();
+		instanceData.put("[]",obj );
+		objectPool.put(counter, handle);
+		return counter++;		}
 	
 	
 	public long allocObject(ClassFile classFile) {

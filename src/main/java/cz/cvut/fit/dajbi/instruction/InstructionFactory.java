@@ -3,10 +3,16 @@ package cz.cvut.fit.dajbi.instruction;
 
 
 import cz.cvut.fit.dajbi.DAJBI;
+import cz.cvut.fit.dajbi.instruction.alloc.ARRAYLENGTH;
 import cz.cvut.fit.dajbi.instruction.alloc.NEW;
+import cz.cvut.fit.dajbi.instruction.alloc.NEWARRAY;
+import cz.cvut.fit.dajbi.instruction.array.ALOAD;
+import cz.cvut.fit.dajbi.instruction.array.ASTORE;
 import cz.cvut.fit.dajbi.instruction.conditions.GOTO;
 import cz.cvut.fit.dajbi.instruction.conditions.GOTOW;
 import cz.cvut.fit.dajbi.instruction.conditions.IF;
+import cz.cvut.fit.dajbi.instruction.conditions.IFNONNULL;
+import cz.cvut.fit.dajbi.instruction.conditions.IFNULL;
 import cz.cvut.fit.dajbi.instruction.conditions.strategy.EQStrategy;
 import cz.cvut.fit.dajbi.instruction.conditions.strategy.GEStrategy;
 import cz.cvut.fit.dajbi.instruction.conditions.strategy.GTStrategy;
@@ -284,6 +290,53 @@ public class InstructionFactory {
 			return new GOTOW(f);
 		case _goto:
 			return new GOTO(f);
+			
+			
+		// Arrays
+		case anewarray:
+			return new NEWARRAY(f,true);
+		case newarray:
+			return new NEWARRAY(f, false);
+			
+		case arraylength:
+			return new ARRAYLENGTH(f);
+			
+		case ifnonnull:
+			return new IFNONNULL(f);
+		case ifnull:
+			return new IFNULL(f);
+			
+			
+		case laload:
+		case caload:
+		case aaload:
+		case iaload:
+		case saload:
+		case faload:
+		case baload:
+		case daload:
+			return new ALOAD(f);
+		
+		case castore:
+			return new ASTORE(f, (Character)f.pop());
+		case aastore:
+			return new ASTORE(f, (Long)f.pop());
+		case iastore:
+			return new ASTORE(f, (Integer)f.pop());
+		case bastore:
+			return new ASTORE(f, (Byte)f.pop());
+		case dastore:
+			return new ASTORE(f, (Double)f.pop());
+		case fastore:
+			return new ASTORE(f, (Float)f.pop());
+		case sastore:
+			return new ASTORE(f, (Short)f.pop());
+		case lastore:
+			return new ASTORE(f, (Long)f.pop());
+		
+			
+			
+			
 
 		default:
 			DAJBI.logger.error("cant find instruction: "+i);
