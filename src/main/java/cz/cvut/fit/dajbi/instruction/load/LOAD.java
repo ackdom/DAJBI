@@ -1,5 +1,6 @@
 package cz.cvut.fit.dajbi.instruction.load;
 
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.stack.Frame;
 
@@ -20,7 +21,13 @@ public class LOAD extends Instruction {
 
 	@Override
 	public void execute() {
-		frame.push(frame.getLocal(index));
+		Object obj = frame.getLocal(index);
+		
+		if (obj != null && obj instanceof HeapHandle) {
+			((HeapHandle) obj).IncReferences();
+		}
+		
+		frame.push(obj);
 	}
 
 }

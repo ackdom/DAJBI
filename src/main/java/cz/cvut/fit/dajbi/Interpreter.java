@@ -20,12 +20,11 @@ public class Interpreter {
 
 	public void run(ClassFile startClass) {
 		Method main = startClass.getMain();
-		call(startClass, main);
-		runloop();
+		run(startClass, main);
 	}
 
-	public void run(ClassFile read, Method clinit) {
-		call(read, clinit);
+	public void run(ClassFile startClass, Method startMethod) {
+		call(startClass, startMethod);
 		runloop();
 	}
 

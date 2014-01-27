@@ -28,6 +28,11 @@ public class ClassFileReader {
 	int index;
 
 	final int magicKeyWord = 0xCAFEBABE;
+	
+	/**
+	 * 
+	 */
+	private int fieldDataOffset = 0;
 
 	public ClassFileReader(String fileName) {
 		this.fileName = fileName;
@@ -101,6 +106,7 @@ public class ClassFileReader {
 			fields[i] = new Field(this);
 		}
 		classFile.setFields(fields);
+		classFile.setDataSize(fieldDataOffset);
 		
 		classFile.setMethodsCount(reader.readShort());
 		Method[] methods = new Method[classFile.getMethodsCount()];
@@ -162,6 +168,14 @@ public class ClassFileReader {
 	 */
 	public void setClassFile(ClassFile classFile) {
 		this.classFile = classFile;
+	}
+
+	public int getFieldDataOffset() {
+		return fieldDataOffset;
+	}
+
+	public void setFieldDataOffset(int fieldDataOffset) {
+		this.fieldDataOffset = fieldDataOffset;
 	}
 	
 	

@@ -1,5 +1,6 @@
 package cz.cvut.fit.dajbi.stack;
 
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Method;
 import cz.cvut.fit.dajbi.parser.Reader;
@@ -36,6 +37,17 @@ public class SystemStack extends Stack<Frame> {
     	 push(frame);
     	 return top();    	 
      }
+
+	@Override
+	public Frame pop() {
+		Frame frame = super.pop();
+		for (Object obj : frame.localVariables.values()) {
+			if(obj != null && obj instanceof HeapHandle) {
+				((HeapHandle) obj).DecReferences();
+			}
+		}
+		return frame;
+	}
      
      
    

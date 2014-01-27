@@ -1,7 +1,5 @@
 package cz.cvut.fit.dajbi.internal.constantpool;
 
-import java.nio.ByteBuffer;
-
 import cz.cvut.fit.dajbi.DAJBI;
 
 public class ConstantPoolLong extends ConstantPoolItem {

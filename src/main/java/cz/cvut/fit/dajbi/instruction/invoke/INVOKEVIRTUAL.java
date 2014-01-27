@@ -3,6 +3,7 @@ package cz.cvut.fit.dajbi.instruction.invoke;
 import java.util.List;
 
 import cz.cvut.fit.dajbi.heap.Heap;
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Method;
@@ -20,7 +21,7 @@ public class INVOKEVIRTUAL extends Instruction {
 		ConstantPoolMethodRef item = frame.getClassFile().getConstantPool().getItem(frame.getReader().readShort(), ConstantPoolMethodRef.class);
 		int attributesCount = Method.getMethodArgumentCount(item.getNameAndType().getDescriptor())+1;
 		List<Object> pop = frame.popArgList(attributesCount);
-		ClassFile cf = Heap.getInstance().getObject((Long)pop.get(0)).getClassFile();
+		ClassFile cf = ((HeapHandle)pop.get(0)).getClassFile();
 		Method method = cf.getMethod(item.getNameAndType().getName(), item.getNameAndType().getDescriptor());
 		
 		

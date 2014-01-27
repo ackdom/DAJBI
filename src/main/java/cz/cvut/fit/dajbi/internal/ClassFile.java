@@ -24,6 +24,11 @@ public class ClassFile {
 	short attributesCount;
 	Attribute[] attributes;
 	
+	/**
+	 * size of fields data representation on heap
+	 */
+	private int dataSize;
+	
 	
 	public Method getMain() {
 		for(Method m : methods) {
@@ -285,6 +290,22 @@ public class ClassFile {
 	 */
 	public void setAttributes(Attribute[] attributes) {
 		this.attributes = attributes;
+	}
+
+	/**
+	 * size of fields data representation on heap
+	 * @return
+	 */
+	public int getDataSize() {
+		return dataSize;
+	}
+
+	/**
+	 * size of fields data representation on heap
+	 * @param dataSize
+	 */
+	public void setDataSize(int dataSize) {
+		this.dataSize = dataSize;
 	}
 
 }

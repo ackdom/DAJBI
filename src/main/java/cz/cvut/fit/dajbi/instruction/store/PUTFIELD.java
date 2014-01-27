@@ -1,7 +1,5 @@
 package cz.cvut.fit.dajbi.instruction.store;
 
-import java.util.Map;
-
 import cz.cvut.fit.dajbi.heap.Heap;
 import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
@@ -20,11 +18,12 @@ public class PUTFIELD extends Instruction {
 		short index = frame.getReader().readShort();
 		Field field = frame.getClassFile().getField(index);
 		Object value = frame.pop();
-		Long ref = (Long) frame.pop();
+		HeapHandle handle = (HeapHandle) frame.pop();
 		
-		HeapHandle object = Heap.getInstance().getObject(ref);
-		Map<String, Object> instanceData = object.getInstanceData();
-		instanceData.put(field.getName(), value);
+//		HeapHandle handle = Heap.getInstance().getObject(ref);
+		handle.setFieldData(field, value);
+		
+		handle.DecReferences();
 	}
 
 }

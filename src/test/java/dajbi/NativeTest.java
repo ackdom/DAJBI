@@ -1,7 +1,5 @@
 package dajbi;
 
-import static org.junit.Assert.*;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

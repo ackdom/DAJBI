@@ -1,5 +1,6 @@
 package cz.cvut.fit.dajbi.instruction.stack;
 
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.stack.Frame;
 
@@ -17,6 +18,10 @@ public class DUPX1 extends Instruction {
 		frame.push(obj1);
 		frame.push(obj2);
 		frame.push(obj1);
+		
+		if (obj1 != null && obj1 instanceof HeapHandle) {
+			((HeapHandle) obj1).IncReferences();
+		}
 	}
 
 }

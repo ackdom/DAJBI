@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.internal.VMSettings;
 import cz.cvut.fit.dajbi.parser.ClassFileReader;
 

@@ -4,6 +4,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import cz.cvut.fit.dajbi.Interpreter;
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.parser.Reader;
 
@@ -26,6 +27,11 @@ public class Frame extends Stack<Object> {
 	}
 
 	public void setLocal(int i, Object o) {
+		Object obj = localVariables.get(i);
+		if (obj != null && obj instanceof HeapHandle) {	//decrement overwritten ref
+			((HeapHandle) obj).DecReferences();
+		}
+		
 		localVariables.put(i, o);
 	}
 
