@@ -21,7 +21,6 @@ public class NEWARRAY extends Instruction {
 	public void execute() {
 
 		ClassFile type = null;
-		int size = (Integer) frame.pop();
 
 		if (typed) {
 			String name = frame
@@ -31,15 +30,15 @@ public class NEWARRAY extends Instruction {
 							ConstantPoolClass.class).getName();
 			
 			type = ClassResolver.resolveWithLookup(name);			
-			frame.push(Heap.getInstance().allocArray(type, size));
 			
 		} else {
 			// reads aType as type of array which doesnt matter for us
-			byte t = frame.getReader().readByte();
-			frame.push(Heap.getInstance().allocArrayPrim(t, size));
+			frame.getReader().readByte();
 		}
 		
 		
+		int size = (Integer) frame.pop();
+		frame.push(Heap.getInstance().allocArray(type, size));
 
 	}
 }

@@ -20,7 +20,6 @@ public class PUTFIELD extends Instruction {
 		Object value = frame.pop();
 		HeapHandle handle = (HeapHandle) frame.pop();
 		
-//		HeapHandle handle = Heap.getInstance().getObject(ref);
 		handle.setFieldData(field, value);
 		
 		handle.DecReferences();

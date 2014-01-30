@@ -13,7 +13,6 @@ public class ARRAYLENGTH extends Instruction {
 
 	@Override
 	public void execute() {
-		//TODO repair getArray()
 		int length = Heap.getInstance().getArray((Long)frame.pop()).length;
 		frame.push(length);
 

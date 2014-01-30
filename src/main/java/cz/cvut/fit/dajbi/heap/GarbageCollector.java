@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
@@ -18,8 +19,8 @@ public class GarbageCollector {
 	
 	private long dstFreeSpace = 0;
 
-	public GarbageCollector(Map<Long,HeapHandle> rootSet, byte[] heapSrc, byte[] heapDst) {
-		this.rootSet = rootSet.values();
+	public GarbageCollector(Set<HeapHandle> rootSet, byte[] heapSrc, byte[] heapDst) {
+		this.rootSet = rootSet;
 		this.heapSrc = ByteBuffer.wrap(heapSrc);
 		this.heapDst = ByteBuffer.wrap(heapDst);
 	}

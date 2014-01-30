@@ -19,7 +19,6 @@ public class GETFIELD extends Instruction {
 		Field field = frame.getClassFile().getField(index);
 		HeapHandle handle = (HeapHandle) frame.pop();
 		
-//		HeapHandle handle = Heap.getInstance().getObject(ref);
 		frame.push(handle.getFieldData(field));
 
 		handle.DecReferences();

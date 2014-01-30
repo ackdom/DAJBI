@@ -1,6 +1,8 @@
 package cz.cvut.fit.dajbi.heap;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
@@ -8,6 +10,7 @@ import cz.cvut.fit.dajbi.internal.Field;
 public class HeapHandle {
 
 	ClassFile classFile;
+	Map<String,Object> instanceData;
 	
 	private int references = 0;
 	
@@ -16,21 +19,25 @@ public class HeapHandle {
 	 */
 	private long dataOffset;
 
-	private long rootIndex;
-	
 	/**
 	 * 
 	 * @param cf {@link ClassFile} represented by this handle
 	 * @param DataOffset offset pointing on start of instance data
 	 */
-	public HeapHandle(ClassFile cf, long DataOffset, long index) {
+	public HeapHandle(ClassFile cf, long DataOffset) {
 		super();
 		classFile = cf;
 		dataOffset = DataOffset;
-		this.rootIndex = index;
 		
 		//sets size of block at the beginning
 		setBytes(-4, ByteBuffer.allocate(4).putInt(cf.getDataSize()).array());
+	}
+	
+	public HeapHandle(ClassFile classFile) {
+		super();
+		this.classFile = classFile;
+		dataOffset = 0;
+		instanceData = new HashMap<String, Object>();
 	}
 	
 
@@ -62,7 +69,7 @@ public class HeapHandle {
 	public void DecReferences() {
 		--references;
 		if(references == 0) {
-			Heap.getInstance().removeFromRootSet(rootIndex);
+			Heap.getInstance().removeFromRootSet(this);
 		}
 	}
 	
@@ -132,7 +139,7 @@ public class HeapHandle {
 		//reference (array)
 		case '[':
 			//TODO array
-			throw new UnsupportedOperationException();
+			return buffer.getLong();
 	
 		default:
 			throw new UnsupportedOperationException();
@@ -209,7 +216,7 @@ public class HeapHandle {
 		//reference (array)
 		case '[':
 			//TODO array
-			throw new UnsupportedOperationException();
+			bytes = ByteBuffer.allocate(8).putLong((Long) value).array();
 	
 		default:
 			throw new UnsupportedOperationException();
@@ -243,4 +250,10 @@ public class HeapHandle {
 	private void setByte(int offset, byte value) {
 		Heap.getInstance().setByte(this.dataOffset + offset + 4, value);
 	}
+
+	Map<String, Object> getInstanceData() {
+		return instanceData;
+	}
+
+	
 }

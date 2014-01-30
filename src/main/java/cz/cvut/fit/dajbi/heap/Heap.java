@@ -1,7 +1,9 @@
 package cz.cvut.fit.dajbi.heap;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import cz.cvut.fit.dajbi.internal.AccessFlag;
 import cz.cvut.fit.dajbi.internal.ClassFile;
@@ -13,7 +15,8 @@ public class Heap {
 	private long counter;
 	public static final Long NULL =  -1L;
 	
-	private Map<Long,HeapHandle> rootSet; //objectPool
+	private Set<HeapHandle> rootSet; //objectPool
+	private Map<Long, HeapHandle> arrays;
 	
 	private int heapSize = 64*1024*1024;
 	//pozor heapSize je ted int (vs. long)
@@ -23,7 +26,9 @@ public class Heap {
 	private long freeSpace = 0;
 	
 	private Heap() {
-		rootSet = new HashMap<Long, HeapHandle>();
+//		rootSet = new HashMap<Long, HeapHandle>();
+		rootSet = new HashSet<HeapHandle>();
+		arrays = new HashMap<Long, HeapHandle>();
 		counter = 1;
 	}
 	
@@ -31,14 +36,14 @@ public class Heap {
 		return instance;
 	}
 	
-	/**
-	 * Returns tagged reference for given index.
-	 * @param id
-	 * @return
-	 */
-	public HeapHandle getObject(long id) {
-		return rootSet.get(id);
-	}
+//	/**
+//	 * Returns tagged reference for given index.
+//	 * @param id
+//	 * @return
+//	 */
+//	public HeapHandle getObject(long id) {
+//		return rootSet.get(id);
+//	}
 	
 	/** 
 	 * Returns index of tagged reference to instance data on given offset in heap.
@@ -47,11 +52,10 @@ public class Heap {
 	 * @return index of tagged reference to instance data on heap
 	 */
 	HeapHandle getObjectReference(long offset, ClassFile classFile) {
-		HeapHandle handle = new HeapHandle(classFile, offset, counter);
+		HeapHandle handle = new HeapHandle(classFile, offset);
 		handle.IncReferences();
 		
-		rootSet.put(counter, handle);
-		incCounter();
+		rootSet.add(handle);
 		return handle;
 //		return incCounter();
 	}
@@ -59,20 +63,20 @@ public class Heap {
 
 	public Object[] getArray(long id) {
 		//TODO array
-		throw new UnsupportedOperationException("arrays");
-//		return (Object[]) getObject(id).getInstanceData().get("[]");
+		return (Object[]) arrays.get(id).getInstanceData().get("[]");
+//		throw new UnsupportedOperationException("arrays");
 	}
 	
-	public HeapHandle allocArray(ClassFile type, int size) {
-		HeapHandle handle = new HeapHandle(type, allocateSpace(type.getDataSize()), counter);
+	public long allocArray(ClassFile type, int size) {
 		//TODO array
-		throw new UnsupportedOperationException("arrays");
-//		Object[] obj = new Object[size];
-//		HeapHandle handle = new HeapHandle(type);
-//		Map<String, Object> instanceData = handle.getInstanceData();
-//		instanceData.put("[]",obj );
-//		objectPool.put(counter, handle);
-//		return counter++;
+//		throw new UnsupportedOperationException("arrays");
+		Object[] obj = new Object[size];
+		HeapHandle handle = new HeapHandle(type);
+		Map<String, Object> instanceData = handle.getInstanceData();
+		instanceData.put("[]",obj );
+		arrays.put(counter, handle);
+		
+		return counter++;
 	}
 	
 	
@@ -82,7 +86,7 @@ public class Heap {
 	}
 
 	public HeapHandle allocObject(ClassFile classFile) {
-		HeapHandle handle = new HeapHandle(classFile, allocateSpace(classFile.getDataSize()), counter);
+		HeapHandle handle = new HeapHandle(classFile, allocateSpace(classFile.getDataSize()));
 		handle.IncReferences();
 
 		for(Field f : classFile.getFields()) {
@@ -90,26 +94,25 @@ public class Heap {
 				handle.setFieldData(f);
 			}
 		}		
-		rootSet.put(counter, handle);
-		incCounter();
+		rootSet.add(handle);
 		return handle;
 //		return incCounter();
 //		throw new UnsupportedOperationException("alloc Object");
 	}
 
-	private long incCounter() {
-		long orig = counter;
-		
-		while(rootSet.containsKey(counter)) {
-			if (counter == Long.MAX_VALUE - 1) {
-				counter = Long.MIN_VALUE;
-			} else {
-				counter++;
-			}
-		}
-		
-		return orig;
-	}
+//	private long incCounter() {
+//		long orig = counter;
+//		
+//		while(rootSet.containsKey(counter)) {
+//			if (counter == Long.MAX_VALUE - 1) {
+//				counter = Long.MIN_VALUE;
+//			} else {
+//				counter++;
+//			}
+//		}
+//		
+//		return orig;
+//	}
 	
 	private long allocateSpace(long objectSize) {
 		//pri zaplneni spusti GC
@@ -164,8 +167,8 @@ public class Heap {
 		return heapData[(int) index];
 	}
 	
-	void removeFromRootSet(long rootIndex) {
-		rootSet.remove(rootIndex);
+	void removeFromRootSet(HeapHandle handle) {
+		rootSet.remove(handle);
 	}
 
 }
