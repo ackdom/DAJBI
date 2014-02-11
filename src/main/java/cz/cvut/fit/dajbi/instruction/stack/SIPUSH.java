@@ -12,7 +12,7 @@ public class SIPUSH extends Instruction {
 
 	@Override
 	public void execute() {
-		frame.push(frame.getReader().readShort());		
+		frame.push((int) frame.getReader().readShort());		
 	}
 
 }

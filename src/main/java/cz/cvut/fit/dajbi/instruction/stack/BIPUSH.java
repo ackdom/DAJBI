@@ -11,7 +11,7 @@ public class BIPUSH extends Instruction {
 
 	@Override
 	public void execute() {
-		frame.push(frame.getReader().readByteToUInt());		
+		frame.push((int)frame.getReader().readByte());		
 	}
 
 }

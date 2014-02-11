@@ -10,8 +10,11 @@ import java.util.Set;
 
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 
 public class GarbageCollector {
+	
+	private static final int FWPOINTEROFFSET = 4;
 
 	private Collection<HeapHandle> rootSet;
 	private ByteBuffer heapSrc;
@@ -34,11 +37,12 @@ public class GarbageCollector {
 		while(rootSetIterator.hasNext()) {
 			HeapHandle handle = rootSetIterator.next();
 			long srcOffset = handle.getDataOffset();
+			if (srcOffset == Heap.NULL) { continue; }
 			ClassFile classFile = handle.getClassFile();
 			
-			int size = heapSrc.get((int) srcOffset);
+			int size = heapSrc.getInt((int) srcOffset);
 			if (size == -2) { //data already copied, use forwarding pointer
-				handle.setDataOffset(heapSrc.getLong((int) (srcOffset + 4)));
+				handle.setDataOffset(heapSrc.getLong((int) (srcOffset + FWPOINTEROFFSET)));
 			} else {
 				long dstOffset = dstFreeSpace;
 				//set ref. to new copy in dstHeap
@@ -64,13 +68,14 @@ public class GarbageCollector {
 		List<Field> referenceFields = getReferenceFields(classFile);
 		for (Field field : referenceFields) {
 			//address of field reference in dstHeap
-			long fieldRefAdr = instanceDstOffset + 4 + field.getFieldDataOffset();
+			long fieldRefAdr = instanceDstOffset + HeapHandle.INTERNALDATASIZE + field.getFieldDataOffset();
 			long srcOffset = heapDst.getLong((int) fieldRefAdr);
-			ClassFile fieldsClassFile = field.getFieldsClassFile();
+			if(srcOffset == Heap.NULL) { continue; }
+			ClassFile fieldsClassFile = getInstancesClassFile(heapSrc, srcOffset);
 			
-			int size = heapSrc.get((int) srcOffset);
+			int size = heapSrc.getInt((int) srcOffset);
 			if (size == -2) {
-				long ref = heapSrc.getLong((int) (srcOffset + 4));
+				long ref = heapSrc.getLong((int) (srcOffset + FWPOINTEROFFSET));
 				heapDst.putLong((int) fieldRefAdr, ref);
 			} else {
 				long dstOffset = dstFreeSpace;
@@ -85,6 +90,19 @@ public class GarbageCollector {
 		
 	}
 
+	/**
+	 * loads instance's ClassFile from heap
+	 * @param heap {@link ByteBuffer} where is instance stored
+	 * @param instanceOffset offset of instance data at heap
+	 * @return
+	 */
+	private ClassFile getInstancesClassFile(ByteBuffer heap, long instanceOffset) {
+		long ref = heap.getLong((int) (instanceOffset + 4));
+		String name = (String) Heap.getInstance().getNative(ref);
+		ClassFile classFile = ClassResolver.resolveWithLookup(name);
+		return classFile;
+	}
+
 	private void copyData(long srcDataOffset, int size) {
 		for (int i = 0; i < size; i++) {
 			heapDst.array()[(int) (dstFreeSpace + i)] = heapSrc.array()[(int) (srcDataOffset + i)];
@@ -95,8 +113,8 @@ public class GarbageCollector {
 	private void breakSrc(long srcDataOffset) {
 		// -2 pro identifikaci "broken heart"
 		heapSrc.putInt((int) srcDataOffset, -2);
-		// left in src forwarding pointer to heapDst
-		heapSrc.putLong((int) (srcDataOffset + 4), dstFreeSpace);
+		// leave in src forwarding pointer to heapDst
+		heapSrc.putLong((int) (srcDataOffset + FWPOINTEROFFSET), dstFreeSpace);
 	}
 
 	private List<Field> getReferenceFields(ClassFile classFile) {

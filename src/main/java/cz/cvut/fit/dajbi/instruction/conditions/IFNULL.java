@@ -1,7 +1,6 @@
 package cz.cvut.fit.dajbi.instruction.conditions;
 
-import cz.cvut.fit.dajbi.heap.Heap;
-import cz.cvut.fit.dajbi.heap.HeapHandle;
+import cz.cvut.fit.dajbi.heap.NullableHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.stack.Frame;
 
@@ -14,10 +13,10 @@ public class IFNULL extends Instruction {
 
 	@Override
 	public void execute() {
-		HeapHandle handle = (HeapHandle) frame.pop();
+		NullableHandle handle = (NullableHandle) frame.pop();
 		
 		int jump = frame.getReader().readShort();
-		if(handle.getDataOffset() == Heap.NULL) {
+		if(handle.isNull()) {
 			frame.getReader().move(jump);
 			frame.getReader().move(-3);
 		}

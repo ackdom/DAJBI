@@ -1,10 +1,12 @@
 package cz.cvut.fit.dajbi.heap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.internal.AccessFlag;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
@@ -12,13 +14,15 @@ import cz.cvut.fit.dajbi.internal.Field;
 public class Heap {
 	
 	private static final Heap instance = new Heap();
-	private long counter;
+	private long arrayInstCounter;
+	private long nativeInstCounter;
 	public static final Long NULL =  -1L;
 	
 	private Set<HeapHandle> rootSet; //objectPool
-	private Map<Long, HeapHandle> arrays;
+	private Map<Long, ArrayHandle> arrays;
+	private Map<Long, Object> nativeInstances;
 	
-	private int heapSize = 64*1024*1024;
+	private int heapSize = 64;//*1024*1024;
 	//pozor heapSize je ted int (vs. long)
 	byte[] heapData = new byte[heapSize];
 	byte[] heapNext = new byte[heapSize];
@@ -28,31 +32,23 @@ public class Heap {
 	private Heap() {
 //		rootSet = new HashMap<Long, HeapHandle>();
 		rootSet = new HashSet<HeapHandle>();
-		arrays = new HashMap<Long, HeapHandle>();
-		counter = 1;
+		arrays = new HashMap<Long, ArrayHandle>();
+		nativeInstances = new HashMap<Long, Object>();
+		arrayInstCounter = 1;
+		nativeInstCounter = 1;
 	}
 	
 	public static Heap getInstance() {
 		return instance;
 	}
 	
-//	/**
-//	 * Returns tagged reference for given index.
-//	 * @param id
-//	 * @return
-//	 */
-//	public HeapHandle getObject(long id) {
-//		return rootSet.get(id);
-//	}
-	
 	/** 
-	 * Returns index of tagged reference to instance data on given offset in heap.
+	 * Returns tagged reference to instance data on given offset in heap.
 	 * @param offset start of instance data
-	 * @param classFile {@link ClassFile} of referenced instance data
-	 * @return index of tagged reference to instance data on heap
+	 * @return tagged reference to instance data on heap
 	 */
-	HeapHandle getObjectReference(long offset, ClassFile classFile) {
-		HeapHandle handle = new HeapHandle(classFile, offset);
+	HeapHandle getObjectReference(long offset) {
+		HeapHandle handle = new HeapHandle(offset);
 		handle.IncReferences();
 		
 		rootSet.add(handle);
@@ -63,66 +59,45 @@ public class Heap {
 
 	public Object[] getArray(long id) {
 		//TODO array
-		return (Object[]) arrays.get(id).getInstanceData().get("[]");
+		return arrays.get(id).getInstanceData();
 //		throw new UnsupportedOperationException("arrays");
 	}
 	
 	public long allocArray(ClassFile type, int size) {
 		//TODO array
 //		throw new UnsupportedOperationException("arrays");
-		Object[] obj = new Object[size];
-		HeapHandle handle = new HeapHandle(type);
-		Map<String, Object> instanceData = handle.getInstanceData();
-		instanceData.put("[]",obj );
-		arrays.put(counter, handle);
+		ArrayHandle handle = new ArrayHandle(new Object[size]);
+		arrays.put(arrayInstCounter, handle);
 		
-		return counter++;
+		return arrayInstCounter++;
 	}
 	
-	
-	public HeapHandle allocArrayPrim(byte type, int size) {
-		//TODO array
-		throw new UnsupportedOperationException("arrays");
-	}
-
 	public HeapHandle allocObject(ClassFile classFile) {
 		HeapHandle handle = new HeapHandle(classFile, allocateSpace(classFile.getDataSize()));
 		handle.IncReferences();
-
-		for(Field f : classFile.getFields()) {
-			if(!f.hasFlag(AccessFlag.ACC_STATIC)) {
-				handle.setFieldData(f);
+		//alloc superclasses' fields as well
+		ClassFile cf = classFile;
+		while (cf != null) {
+			for (Field f : cf.getFields()) {
+				if (!f.hasFlag(AccessFlag.ACC_STATIC)) {
+					handle.setFieldData(f);
+				}
 			}
-		}		
+			cf = cf.getSuperClassCF();
+		}
 		rootSet.add(handle);
 		return handle;
-//		return incCounter();
-//		throw new UnsupportedOperationException("alloc Object");
 	}
 
-//	private long incCounter() {
-//		long orig = counter;
-//		
-//		while(rootSet.containsKey(counter)) {
-//			if (counter == Long.MAX_VALUE - 1) {
-//				counter = Long.MIN_VALUE;
-//			} else {
-//				counter++;
-//			}
-//		}
-//		
-//		return orig;
-//	}
-	
 	private long allocateSpace(long objectSize) {
 		//pri zaplneni spusti GC
-		if (freeSpace + objectSize + 4 >= heapSize) {
+		while (freeSpace + objectSize + HeapHandle.INTERNALDATASIZE >= heapSize && heapSize < Integer.MAX_VALUE) {
 			collectGarbage();
 		}
 		
 		long origFreeSpace = freeSpace;
-		//allocating space for instance data + 1 integer for size of this data
-		freeSpace += objectSize + 4;
+		//allocating space for instance data + INTERNALDATASIZE for internal instance data
+		freeSpace += objectSize + HeapHandle.INTERNALDATASIZE;
 		
 		
 		
@@ -133,6 +108,7 @@ public class Heap {
 				throw new OutOfMemoryError();
 			}
 		}
+//		DAJBI.logger.fatal(freeSpace + " / " + heapSize);
 		return origFreeSpace;
 	}
 	
@@ -169,6 +145,19 @@ public class Heap {
 	
 	void removeFromRootSet(HeapHandle handle) {
 		rootSet.remove(handle);
+	}
+	
+	public long allocNative(Object obj) {
+		nativeInstances.put(nativeInstCounter, obj);
+		return nativeInstCounter++;
+	}
+	
+	public Object getNative(long ref) {
+		return nativeInstances.get(ref);
+	}
+	
+	public void setNative(long ref, Object obj) {
+		nativeInstances.put(ref, obj);
 	}
 
 }

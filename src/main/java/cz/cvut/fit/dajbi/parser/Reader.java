@@ -47,12 +47,10 @@ public class Reader {
 	}
 
 	public int readInt() {
-		int tmp = 0;
-		for (int i = 0; i < 4; i++) {
-			tmp = tmp << 8;
-			tmp += readByte();
-		}
-		return tmp;
+		ByteBuffer buffer = ByteBuffer.allocate(4);
+		buffer.put(readBytes(4));
+		buffer.flip();
+		return buffer.getInt();
 	}
 
 	public long readLong() {

@@ -25,7 +25,7 @@ public class ClassFile {
 	Attribute[] attributes;
 	
 	/**
-	 * size of fields data representation on heap
+	 * @see #setDataSize(int)
 	 */
 	private int dataSize;
 	
@@ -65,7 +65,18 @@ public class ClassFile {
 		
 		ConstantPoolFieldRef fieldRef = file.constantPool.getItem(index, ConstantPoolFieldRef.class);        
         file = ClassResolver.resolveWithLookup(fieldRef.getClassRef().getName());
-		return file.getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptor());
+        Field res;
+        ClassFile cf = file;
+        do {
+        	res = cf.getField(fieldRef.getNameAndType().getName(), fieldRef.getNameAndType().getDescriptor());
+        	if (res == null) {
+        		cf = cf.getSuperClassCF();
+        		if (cf == null) {
+        			throw new AbstractMethodError("Field: " + fieldRef.getNameAndType().getName() + " " + fieldRef.getNameAndType().getDescriptor());
+        		}
+        	}
+        } while (res == null);
+		return res;
 	}
 	
 	public Field getField(String name, String desr) {
@@ -293,7 +304,7 @@ public class ClassFile {
 	}
 
 	/**
-	 * size of fields data representation on heap
+	 * size of fields' data representation on heap, hopefully including superclasses' fields
 	 * @return
 	 */
 	public int getDataSize() {
@@ -301,11 +312,27 @@ public class ClassFile {
 	}
 
 	/**
-	 * size of fields data representation on heap
+	 * size of fields' data representation on heap, hopefully including superclasses' fields
 	 * @param dataSize
 	 */
 	public void setDataSize(int dataSize) {
 		this.dataSize = dataSize;
+	}
+	
+	/**
+	 * resolves superclass a returns its {@link ClassFile}
+	 * @return {@link ClassFile} of superclass; null if there is no superclass (for {@link Object})
+	 */
+	public ClassFile getSuperClassCF() {
+		if (getSuperClass() == 0) return null;
+		
+		ClassFile superClass = ClassResolver.resolveWithLookup(this.getConstantPool().getItem(this.getSuperClass(), ConstantPoolClass.class).getName());
+		return superClass;
+	}
+	
+	
+	public String getName() {
+		return this.constantPool.getItem(this.thisClass, ConstantPoolClass.class).getName();
 	}
 
 }

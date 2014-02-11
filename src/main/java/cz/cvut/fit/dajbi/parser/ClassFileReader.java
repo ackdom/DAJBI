@@ -12,6 +12,8 @@ import cz.cvut.fit.dajbi.internal.Field;
 import cz.cvut.fit.dajbi.internal.Method;
 import cz.cvut.fit.dajbi.internal.attributes.Attribute;
 import cz.cvut.fit.dajbi.internal.constantpool.ConstantPool;
+import cz.cvut.fit.dajbi.internal.constantpool.ConstantPoolClass;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 
 public class ClassFileReader {
 
@@ -32,6 +34,7 @@ public class ClassFileReader {
 	/**
 	 * 
 	 */
+	//TODO interface zapocitat jejich velikost
 	private int fieldDataOffset = 0;
 
 	public ClassFileReader(String fileName) {
@@ -98,6 +101,12 @@ public class ClassFileReader {
 		int[] interfaces = new int[classFile.getInterfacesCount()];
 		for (int i = 0; i < classFile.getInterfacesCount(); i++) {
 			interfaces[i] = reader.readShort();
+		}
+		
+		//put offset of data behind superclasses' instance data
+		ClassFile superClass = classFile.getSuperClassCF();
+		if (superClass != null) { //class "Object" doesn't have superclass
+			fieldDataOffset = superClass.getDataSize();
 		}
 		
 		classFile.setFieldsCount(reader.readShort());

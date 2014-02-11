@@ -41,8 +41,9 @@ public class Field {
 		}
 		
 		fieldDataOffset = classFileReader.getFieldDataOffset();
-		classFileReader.setFieldDataOffset(fieldDataOffset + getSize());
-			
+		if (!hasFlag(AccessFlag.ACC_STATIC)) {
+			classFileReader.setFieldDataOffset(fieldDataOffset + getSize());
+		}	
 	}
 	
 	public boolean hasFlag(int flag) {
@@ -65,6 +66,11 @@ public class Field {
 		return s.substring(1, s.length()-1); //oreze "L" na zacatku a ";" na konci 
 	}
 	
+	
+	/**
+	 * {@code ClassFile} of this filed's type. Not necessarily the type of the instance referenced.
+	 * @return
+	 */
 	public ClassFile getFieldsClassFile() {
 		return ClassResolver.resolveWithLookup(getFieldsClassName());
 	}
@@ -124,7 +130,8 @@ public class Field {
 			
 		//reference (array)
 		case '[':
-			throw new UnsupportedOperationException();
+			//TODO arrays
+			return 8;
 
 		default:
 			throw new UnsupportedOperationException();

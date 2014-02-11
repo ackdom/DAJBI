@@ -1,8 +1,15 @@
 package cz.cvut.fit.dajbi;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cz.cvut.fit.dajbi.heap.Heap;
+import cz.cvut.fit.dajbi.heap.HeapHandle;
+import cz.cvut.fit.dajbi.heap.NativeObjectHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.instruction.InstructionFactory;
 import cz.cvut.fit.dajbi.internal.ClassFile;
@@ -53,10 +60,44 @@ public class Interpreter {
 
 		Object returnValue = null;
 		if (method.getName().equals("println")) {
-			System.out.println(args.get(1));
+			Object arg = args.get(1);
+			if (arg instanceof NativeObjectHandle) {
+				arg = ((NativeObjectHandle) arg).getInstanceData();
+			}
+//			String str = (String) Heap.getInstance().getNative((Long) arg);
+			System.out.println(arg);
+			return;
 		}
 		if (method.getName().equals("getSecret")) {
 			returnValue = 42;
+		}
+		if (method.getName().equals("print")) {
+			System.out.print(args.get(1));
+		}
+		if (method.getName().equals("open")) {
+			if (cf.getName().endsWith("FileReader")) {
+				try {
+					BufferedReader reader = new BufferedReader(new FileReader((String) args.get(1)));
+					long nativeRef = Heap.getInstance().allocNative(reader);
+					stack.top().push(nativeRef);
+					return;
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		if (method.getName().equals("readLine")) {
+			try {
+				Object reader = Heap.getInstance().getNative(((Long) args.get(1)));
+				String line = ((BufferedReader) reader).readLine();
+//				long nativeRef = Heap.getInstance().allocNative(line);
+				stack.top().push(new NativeObjectHandle(line));
+				return;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
@@ -81,8 +122,7 @@ public class Interpreter {
 
 			Instruction byCode = InstructionFactory.byCode(top.getReader()
 					.readByteToUInt(), top);
-			System.out
-					.println("Instrukce " + byCode.getClass().getSimpleName());
+			DAJBI.logger.debug("Instrukce " + byCode.getClass().getSimpleName());
 			byCode.execute();
 
 		}

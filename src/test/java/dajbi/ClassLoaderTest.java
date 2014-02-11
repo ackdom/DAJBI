@@ -17,7 +17,7 @@ public class ClassLoaderTest {
 	}
 
 	@Test
-	public void lookupsuccess() {
+	public void lookupsuccess() throws ClassNotFoundException {
 		String name = SampleClass01.class.getName();
 		assertEquals(ClassLoader.classLookUp(name), "target" + File.separator + "classes" + File.separator + "cz" + File.separator +
 				"cvut" + File.separator + "fit" + File.separator + "dajbi" + File.separator + "testclasses" + File.separator + "SampleClass01.class");
@@ -25,10 +25,10 @@ public class ClassLoaderTest {
 
 	}
 	
-	@Test
-	public void lookopfail() {
+	@Test(expected=ClassNotFoundException.class)
+	public void lookopfail() throws ClassNotFoundException {
 		String name = "cz.fit.cvut.dajbi.notexisting.MyClass";
-		assertEquals(ClassLoader.classLookUp(name), null);
+		ClassLoader.classLookUp(name);
 	}
 
 }

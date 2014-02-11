@@ -6,11 +6,12 @@ import java.util.Map;
 
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 
-public class HeapHandle {
+public class HeapHandle implements NullableHandle {
+	public static final int INTERNALDATASIZE = 12; 
 
-	ClassFile classFile;
-	Map<String,Object> instanceData;
+	private ClassFile classFile;
 	
 	private int references = 0;
 	
@@ -29,17 +30,53 @@ public class HeapHandle {
 		classFile = cf;
 		dataOffset = DataOffset;
 		
-		//sets size of block at the beginning
-		setBytes(-4, ByteBuffer.allocate(4).putInt(cf.getDataSize()).array());
+		if (dataOffset != Heap.NULL) {
+			//sets size of instance's data
+			storeInstanceDataSize();
+			storeClassFile();
+		}
+	}
+
+	/**
+	 * Sets {@code int} representing size of instance's data. Including internal data of {@code HeapHandle}.
+	 * Size is stored on the beginning of this data representation on heap.
+	 */
+	private void storeInstanceDataSize() {
+		setBytes(-INTERNALDATASIZE + 0, ByteBuffer.allocate(4).putInt(classFile.getDataSize() + INTERNALDATASIZE)
+				.array());
 	}
 	
-	public HeapHandle(ClassFile classFile) {
+	/**
+	 * classFile name is stored after size at offset of 4 bytes (int) and takes 8 bytes (long)
+	 */
+	private void storeClassFile() {
+		String name = classFile.getName();
+		long ref = Heap.getInstance().allocNative(name);
+		setBytes(-INTERNALDATASIZE + 4, ByteBuffer.allocate(8).putLong(ref).array());
+	}
+
+	/**
+	 * Creates new {@link HeapHandle} for data at given offset.
+	 * ClassFile is loaded from data at the offset position.
+	 * @param offset
+	 */
+	HeapHandle(long offset) {
 		super();
-		this.classFile = classFile;
-		dataOffset = 0;
-		instanceData = new HashMap<String, Object>();
+		dataOffset = offset;
+		classFile = loadClassFile();
 	}
-	
+
+	/**
+	 * Gets {@code ClassFile} of referenced instance.
+	 * @return
+	 */
+	private ClassFile loadClassFile() {
+		byte[] bytes = getBytes(-INTERNALDATASIZE + 4, 8);
+		long ref = ByteBuffer.wrap(bytes).getLong();
+		String name = (String) Heap.getInstance().getNative(ref);
+		ClassFile classFile = ClassResolver.resolveWithLookup(name);
+		return classFile;
+	}
 
 	/**
 	 * @return the classFile
@@ -94,7 +131,7 @@ public class HeapHandle {
 	}
 	
 	private byte getByte(int offset) {
-		return Heap.getInstance().getByte(this.dataOffset + offset + 4);
+		return Heap.getInstance().getByte(this.dataOffset + offset + INTERNALDATASIZE);
 	}
 
 
@@ -133,8 +170,7 @@ public class HeapHandle {
 			
 		//reference (class)
 		case 'L':
-			ClassFile fieldsClassFile = field.getFieldsClassFile();
-			return Heap.getInstance().getObjectReference(buffer.getLong(), fieldsClassFile);
+			return Heap.getInstance().getObjectReference(buffer.getLong());
 			
 		//reference (array)
 		case '[':
@@ -164,38 +200,47 @@ public class HeapHandle {
 		switch (field.getDescription().charAt(0)) {
 		//byte
 		case 'B':
+			if (value == null) { value = new Byte((byte) 0); }
 			bytes = ByteBuffer.allocate(1).put((Byte) value).array();
 			break;
 		//boolean
 		case 'Z':
+			if (value == null) { value = new Boolean(false); }
 			boolean b = (Boolean) value;
 			bytes = ByteBuffer.allocate(1).put((byte) (b?1:0)).array();
 			break;
 			
 		//char
 		case 'C':
+			if (value == null) { value = new Character('\u0000'); }
 			bytes = ByteBuffer.allocate(2).putChar((Character) value).array();
 			break;
 		//short
 		case 'S':
+			if (value == null) { value = new Short((short) 0); }
 			bytes = ByteBuffer.allocate(2).putShort((Short) value).array();
 			break;
 			
 		//float
 		case 'F':
+			if (value == null) { value = new Float(0); }
 			bytes = ByteBuffer.allocate(4).putFloat((Float) value).array();
 			break;
 		//int
 		case 'I':
-			bytes = ByteBuffer.allocate(4).putInt((Integer) value).array();
+			if(value == null) { value = new Integer(0); } 
+			bytes = ByteBuffer.allocate(4).putInt(((Integer) value)).array();
+//			bytes = ByteBuffer.allocate(4).putInt(((Number) value).intValue()).array();
 			break;
 			
 		//double
 		case 'D':
+			if (value == null) { value = new Double(0); }
 			bytes = ByteBuffer.allocate(8).putDouble((Double) value).array();
 			break;
 		//long
 		case 'J':
+			if (value == null) { value = new Long(0); }
 			bytes = ByteBuffer.allocate(8).putLong((Long) value).array();
 			break;
 			
@@ -206,17 +251,19 @@ public class HeapHandle {
 			if (value != null) {
 //				HeapHandle handle = Heap.getInstance().getObject((Long) value);
 				val = handle.getDataOffset();
+				handle.DecReferences();
 			} else {
 				val = Heap.NULL;
 			}
-			handle.DecReferences();
 			bytes = ByteBuffer.allocate(8).putLong(val).array();
 			break;
 			
 		//reference (array)
 		case '[':
 			//TODO array
+			if (value == null) { value = Heap.NULL; }
 			bytes = ByteBuffer.allocate(8).putLong((Long) value).array();
+			break;
 	
 		default:
 			throw new UnsupportedOperationException();
@@ -248,12 +295,15 @@ public class HeapHandle {
 	}
 	
 	private void setByte(int offset, byte value) {
-		Heap.getInstance().setByte(this.dataOffset + offset + 4, value);
+		Heap.getInstance().setByte(this.dataOffset + offset + INTERNALDATASIZE, value);
 	}
 
-	Map<String, Object> getInstanceData() {
-		return instanceData;
+	public boolean isNull() {
+		return dataOffset == Heap.NULL;
 	}
 
+	public void setNull() {
+		dataOffset = Heap.NULL;
+	}
 	
 }

@@ -34,7 +34,13 @@ public class ClassResolver {
 			return classFiles.get(str);
 		}
 		
-		return resolveClass(ClassLoader.classLookUp(str));
+		try {
+			return resolveClass(ClassLoader.classLookUp(str));
+		} catch (ClassNotFoundException e) {
+			NoClassDefFoundError error = new NoClassDefFoundError();
+			error.initCause(e);
+			throw error;
+		}
 	}
 
 }

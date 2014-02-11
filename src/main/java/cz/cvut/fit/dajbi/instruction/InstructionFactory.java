@@ -38,12 +38,15 @@ import cz.cvut.fit.dajbi.instruction.load.GETSTATIC;
 import cz.cvut.fit.dajbi.instruction.load.LOAD;
 import cz.cvut.fit.dajbi.instruction.math.ADD;
 import cz.cvut.fit.dajbi.instruction.math.IINC;
+import cz.cvut.fit.dajbi.instruction.math.LCMP;
 import cz.cvut.fit.dajbi.instruction.math.MUL;
 import cz.cvut.fit.dajbi.instruction.math.SUB;
+import cz.cvut.fit.dajbi.instruction.stack.ACONSTNULL;
 import cz.cvut.fit.dajbi.instruction.stack.BIPUSH;
 import cz.cvut.fit.dajbi.instruction.stack.DUP;
 import cz.cvut.fit.dajbi.instruction.stack.DUPX1;
 import cz.cvut.fit.dajbi.instruction.stack.ICONST;
+import cz.cvut.fit.dajbi.instruction.stack.LCONST;
 import cz.cvut.fit.dajbi.instruction.stack.LDC;
 import cz.cvut.fit.dajbi.instruction.stack.POP;
 import cz.cvut.fit.dajbi.instruction.stack.SIPUSH;
@@ -89,6 +92,9 @@ public class InstructionFactory {
 		case ldc2_w:
 		case ldc_w:
 			return new LDC(f,true);
+		case lconst_0:
+		case lconst_1:
+			return new LCONST(f, instruction.getValue() - Instructions.lconst_0.getValue());
 		
 		// Calls & Returns 	
 		case invokestatic:
@@ -257,6 +263,9 @@ public class InstructionFactory {
 			return new ADD<Long>(f);
 		case lmul:
 			return new MUL<Long>(f);
+		//cmp
+		case lcmp:
+			return new LCMP(f);
 			
 			
 		// ifs 
@@ -318,21 +327,24 @@ public class InstructionFactory {
 			return new ALOAD(f);
 		
 		case castore:
-			return new ASTORE(f, (Character)f.pop());
+			return new ASTORE(f, new Character((char)((Number)f.pop()).intValue()));
 		case aastore:
-			return new ASTORE(f, (Long)f.pop());
+			return new ASTORE(f, new Long(((Number)f.pop()).longValue()));
 		case iastore:
-			return new ASTORE(f, (Integer)f.pop());
+			return new ASTORE(f, new Integer(((Number)f.pop()).intValue()));
 		case bastore:
-			return new ASTORE(f, (Byte)f.pop());
+			return new ASTORE(f, new Byte(((Number)f.pop()).byteValue()));
 		case dastore:
-			return new ASTORE(f, (Double)f.pop());
+			return new ASTORE(f, new Double(((Number)f.pop()).doubleValue()));
 		case fastore:
-			return new ASTORE(f, (Float)f.pop());
+			return new ASTORE(f, new Float(((Number)f.pop()).floatValue()));
 		case sastore:
-			return new ASTORE(f, (Short)f.pop());
+			return new ASTORE(f, new Short(((Number)f.pop()).shortValue()));
 		case lastore:
-			return new ASTORE(f, (Long)f.pop());
+			return new ASTORE(f, new Long(((Number)f.pop()).longValue()));
+			
+		case aconst_null:
+			return new ACONSTNULL(f);
 		
 			
 			
@@ -467,8 +479,9 @@ public class InstructionFactory {
         ladd(97),
         laload(47),
         lastore(80),
-       // lcmp),
-        //lconst_<l>),
+        lcmp(148),
+        lconst_0(9),
+        lconst_1(10),
         ldc(18),
         ldc_w(19),
         ldc2_w(20),
@@ -513,6 +526,8 @@ public class InstructionFactory {
     //    tableswitch),
     //    wide),
         print(254),
+        
+        aconst_null(1),
         
         //custom
         invalid(-1);
