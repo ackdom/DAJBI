@@ -14,6 +14,8 @@ import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.instruction.InstructionFactory;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Method;
+import cz.cvut.fit.dajbi.nativemethods.NativeFileReader;
+import cz.cvut.fit.dajbi.nativemethods.NativeObject;
 import cz.cvut.fit.dajbi.stack.Frame;
 import cz.cvut.fit.dajbi.stack.SystemStack;
 
@@ -41,7 +43,7 @@ public class Interpreter {
 
 	public void call(ClassFile cf, Method method, List<Object> args) {
 		DAJBI.logger.error("Called method " + method.getName() + " "
-				+ method.getDescription());
+				+ method.getDescription() + " class: " + cf.getName());
 		if (method.getCodeAttribute() == null) {
 
 			callNative(cf, method, args);
@@ -57,8 +59,7 @@ public class Interpreter {
 	}
 
 	private void callNative(ClassFile cf, Method method, List<Object> args) {
-
-		Object returnValue = null;
+		
 		if (method.getName().equals("println")) {
 			Object arg = args.get(1);
 			if (arg instanceof NativeObjectHandle) {
@@ -68,42 +69,30 @@ public class Interpreter {
 			System.out.println(arg);
 			return;
 		}
-		if (method.getName().equals("getSecret")) {
-			returnValue = 42;
-		}
 		if (method.getName().equals("print")) {
-			System.out.print(args.get(1));
-		}
-		if (method.getName().equals("open")) {
-			if (cf.getName().endsWith("FileReader")) {
-				try {
-					BufferedReader reader = new BufferedReader(new FileReader((String) args.get(1)));
-					long nativeRef = Heap.getInstance().allocNative(reader);
-					stack.top().push(nativeRef);
-					return;
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			Object arg = args.get(1);
+			if (arg instanceof NativeObjectHandle) {
+				arg = ((NativeObjectHandle) arg).getInstanceData();
 			}
+			System.out.print(arg);
+			return;
 		}
-		if (method.getName().equals("readLine")) {
-			try {
-				Object reader = Heap.getInstance().getNative(((Long) args.get(1)));
-				String line = ((BufferedReader) reader).readLine();
-//				long nativeRef = Heap.getInstance().allocNative(line);
-				stack.top().push(new NativeObjectHandle(line));
-				return;
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (cf.getName().equals("java/lang/Object")) {
+			NativeObject.callNative(cf, method, args, stack);
+			return;
+		}
+		if (cf.getName().equals("java/io/FileReader")) {
+			NativeFileReader.callNative(cf, method, args, stack);
+			return;
+		}
+		if (method.getName().equals("getSecret")) {
+			stack.top().push(42);
+			return;
 		}
 		
 		
-		if(returnValue != null) {
-			stack.top().push(returnValue);
-		}
+		//Method not found
+		throw new AbstractMethodError(method.getName() + " " + method.getDescription() + "  cl: " + cf.getName());
 		
 	}
 

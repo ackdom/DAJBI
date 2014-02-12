@@ -20,7 +20,7 @@ public class NativeTest {
 
 	@BeforeClass
 	public static void once() {
-		BasicConfigurator.configure();
+		Tests.init();
 		Logger.getRootLogger().setLevel(Level.DEBUG);
 	}
 

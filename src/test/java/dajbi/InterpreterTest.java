@@ -1,6 +1,5 @@
 package dajbi;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -20,7 +19,7 @@ public class InterpreterTest {
 	
 	@BeforeClass
 	public static void once() {
-		BasicConfigurator.configure();
+		Tests.init();
 		Logger.getRootLogger().setLevel(Level.DEBUG);
 	}
 

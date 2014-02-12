@@ -1,8 +1,5 @@
 package dajbi;
 
-import static org.junit.Assert.*;
-
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
@@ -17,8 +14,8 @@ public class FileTest {
 
 	@BeforeClass
 	public static void once() {
-		BasicConfigurator.configure();
-		Logger.getRootLogger().setLevel(Level.FATAL);
+		Tests.init();
+		Logger.getRootLogger().setLevel(Level.TRACE);
 	}
 
 	@Test
