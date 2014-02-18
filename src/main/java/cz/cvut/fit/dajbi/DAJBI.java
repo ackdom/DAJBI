@@ -1,8 +1,14 @@
 package cz.cvut.fit.dajbi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import cz.cvut.fit.dajbi.heap.Heap;
+import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.methodarea.ClassLoader;
 import cz.cvut.fit.dajbi.methodarea.ClassResolver;
@@ -16,6 +22,7 @@ public class DAJBI {
 
 		// Configure logger
 		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.DEBUG);
 		logger.debug("Hello World!");
 		
 		if (args.length < 1) {
@@ -27,33 +34,45 @@ public class DAJBI {
 		}
 		
 		if (args[0].equals("-cp")) {
-			run(args[1], args[2]);
+			run(args[1], args[2], getArgs(args, 3));
 		} else if (args[0].equals("-jar")) {
-			runJar(args[1]);
+			runJar(args[1], getArgs(args, 2));
 		} else {
-			run(args[0]);
+			run(args[0], getArgs(args, 1));
 		}
-//		ClassFile paa = ClassResolver.resolveClass("C:/Users/Jakub/workspace/fit/paa/du1/bin/paa/Main.class");
-//		Interpreter interpreter = new Interpreter();
-//		interpreter.run(paa);
+
+		logger.debug("Program ended");
 	}
 
-	private static void run(String mainClass) {
+	private static void run(String mainClass, List<Object> args) {
 		ClassFile classFile = ClassResolver.resolveClass(mainClass);
 		Interpreter interpreter = new Interpreter();
-		interpreter.run(classFile);
+		interpreter.run(classFile, args);
 	}
 
-	private static void runJar(String jarArchive) {
+	private static void runJar(String jarArchive, List<Object> args) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private static void run(String classPath, String mainClass) {
+	private static void run(String classPath, String mainClass, List<Object> args) {
 		ClassLoader.addClassPath(classPath);
 		ClassFile classFile = ClassResolver.resolveWithLookup(mainClass);
 		Interpreter interpreter = new Interpreter();
-		interpreter.run(classFile);
+		interpreter.run(classFile, args);
+	}
+	
+	private static List<Object> getArgs(String[] args, int firstArg) {
+		int size = args.length - firstArg;
+		long arrRef = Heap.getInstance().allocArray(null, size);
+		Object[] array = Heap.getInstance().getArray(arrRef);
+		for (int i = firstArg; i < args.length; i++) {
+			HeapHandle argRef = Heap.getInstance().allocString(args[i]);
+			array[i-firstArg] = argRef;
+		}
+		List<Object> res = new ArrayList<Object>();
+		res.add(arrRef);
+		return res;
 	}
 
 }

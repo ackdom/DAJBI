@@ -2,15 +2,17 @@ package cz.cvut.fit.dajbi.methodarea;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import cz.cvut.fit.dajbi.internal.VMSettings;
 
 public class ClassLoader {
 
-	private static Set<String> classPaths = new HashSet<String>(Arrays.asList(VMSettings.COMPILED_CLASSES, VMSettings.RUNTIME_CLASSES));
+	private static List<String> classPaths = new ArrayList<String>(Arrays.asList(VMSettings.COMPILED_CLASSES, VMSettings.RUNTIME_CLASSES, VMSettings.RUNTIME_CLASSES2));
 	
 	
 	public static String classLookUp(String cl) throws ClassNotFoundException {

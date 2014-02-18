@@ -1,6 +1,8 @@
 package cz.cvut.fit.dajbi.internal.constantpool;
 
 import cz.cvut.fit.dajbi.DAJBI;
+import cz.cvut.fit.dajbi.heap.Heap;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
 
 public class ConstantPoolClass extends ConstantPoolItem {
 
@@ -15,4 +17,11 @@ public class ConstantPoolClass extends ConstantPoolItem {
 	public String getName() {
 		return constantPool.getItem(nameIndex, ConstantPoolUTF8.class).getTitle();
 	}
+
+	@Override
+	public Object valueForLDC() {
+		return Heap.getInstance().allocNative(ClassResolver.resolveWithLookup(getName()));
+	}
+	
+	
 }

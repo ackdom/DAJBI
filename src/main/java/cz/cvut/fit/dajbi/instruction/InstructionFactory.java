@@ -329,7 +329,7 @@ public class InstructionFactory {
 		case castore:
 			return new ASTORE(f, new Character((char)((Number)f.pop()).intValue()));
 		case aastore:
-			return new ASTORE(f, new Long(((Number)f.pop()).longValue()));
+			return new ASTORE(f, f.pop());
 		case iastore:
 			return new ASTORE(f, new Integer(((Number)f.pop()).intValue()));
 		case bastore:

@@ -59,7 +59,7 @@ public class ClassFile {
 	
 	public Field getField(int index) {
 		ClassFile file = this;
-		while(!(constantPool.getItem(index) instanceof ConstantPoolFieldRef)) {
+		while(!(file.constantPool.getItem(index) instanceof ConstantPoolFieldRef)) {
 			file = ClassResolver.resolveWithLookup(file.constantPool.getItem(file.superClass, ConstantPoolClass.class).getName());
 		}
 		

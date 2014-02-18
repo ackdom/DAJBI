@@ -36,6 +36,9 @@ public class LDC extends Instruction {
 		Object forLDC = item.valueForLDC();
 		
 //		//TODO str
+		if (forLDC instanceof String) {
+			forLDC = Heap.getInstance().allocString((String) forLDC);
+		}
 //		if (forLDC instanceof String) {
 //			String stringForLDC = (String) forLDC;
 //			//alloc array

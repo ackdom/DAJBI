@@ -1,8 +1,10 @@
 package cz.cvut.fit.dajbi.nativemethods;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -13,38 +15,39 @@ import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Method;
 import cz.cvut.fit.dajbi.stack.SystemStack;
 
-public class NativeFileReader {
+public class NativeFileWriter {
 	
 	public static void callNative(ClassFile cf, Method method, List<Object> args, SystemStack stack) {
 		if (method.getName().equals("open")) {
 			try {
 				String file = Heap.getInstance().getString((HeapHandle) args.get(1));
-				BufferedReader reader = new BufferedReader(new FileReader(file));
-				long nativeRef = Heap.getInstance().allocNative(reader);
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				long nativeRef = Heap.getInstance().allocNative(writer);
 				stack.top().push(nativeRef);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return;
-		}
-		if (method.getName().equals("close")) {
-			BufferedReader reader = (BufferedReader) Heap.getInstance().getNative(((Long) args.get(1)));
-			try {
-				reader.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return;
 		}
-		if (method.getName().equals("readLine")) {
+		if (method.getName().equals("close")) {
+			BufferedWriter writer = (BufferedWriter) Heap.getInstance().getNative(((Long) args.get(1)));
 			try {
-				Object reader = Heap.getInstance().getNative(((Long) args.get(1)));
-				String line = ((BufferedReader) reader).readLine();
+				writer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		if (method.getName().equals("write")) {
+			try {
+				Object writer = Heap.getInstance().getNative(((Long) args.get(1)));
+				String line = Heap.getInstance().getString((HeapHandle) args.get(2));
+				((BufferedWriter) writer).write(line);
 //				long nativeRef = Heap.getInstance().allocNative(line);
 //				stack.top().push(new NativeObjectHandle(line));
-				stack.top().push(Heap.getInstance().allocString(line));
+//				stack.top().push(Heap.getInstance().allocString(line));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

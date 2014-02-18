@@ -38,7 +38,7 @@ public class INVOKEVIRTUAL extends Instruction {
 		} while (method == null);
 		
 		
-		frame.getInterpreter().call(cf, method, pop);
+		frame.getInterpreter().call(classFile, method, pop);
 		
 	}
 

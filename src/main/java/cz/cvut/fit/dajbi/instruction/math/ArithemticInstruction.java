@@ -14,8 +14,8 @@ public class ArithemticInstruction<T extends Number> extends Instruction {
 	@SuppressWarnings("unchecked")
 	public ArithemticInstruction(Frame f) {
 		super(f);
-		a = (T) frame.pop();
 		b = (T) frame.pop();
+		a = (T) frame.pop();
 		arithmetic = new Arithmetic<T>(a.getClass());
 	}
 

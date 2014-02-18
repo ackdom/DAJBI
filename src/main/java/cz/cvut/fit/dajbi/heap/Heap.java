@@ -3,13 +3,18 @@ package cz.cvut.fit.dajbi.heap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import cz.cvut.fit.dajbi.DAJBI;
+import cz.cvut.fit.dajbi.Interpreter;
 import cz.cvut.fit.dajbi.internal.AccessFlag;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Field;
+import cz.cvut.fit.dajbi.internal.Method;
+import cz.cvut.fit.dajbi.methodarea.ClassResolver;
+import cz.cvut.fit.dajbi.stack.Frame;
 
 public class Heap {
 	
@@ -22,7 +27,7 @@ public class Heap {
 	private Map<Long, ArrayHandle> arrays;
 	private Map<Long, Object> nativeInstances;
 	
-	private int heapSize = 64;//*1024*1024;
+	private int heapSize = 64*1024*1024;
 	//pozor heapSize je ted int (vs. long)
 	byte[] heapData = new byte[heapSize];
 	byte[] heapNext = new byte[heapSize];
@@ -160,4 +165,80 @@ public class Heap {
 		nativeInstances.put(ref, obj);
 	}
 
+	public HeapHandle allocString(String string) {
+		
+		if (string == null) {
+			ClassFile stringCF = ClassResolver
+					.resolveWithLookup("java/lang/String");
+			HeapHandle heapRef = new HeapHandle(stringCF, Heap.NULL);
+			return heapRef;
+		}
+		//TODO str
+		Interpreter interpreter = new Interpreter();
+		Frame frame = interpreter.getStack().newFrame();
+		frame.setInterpreter(interpreter);
+		//alloc array
+		long arrRef = Heap.getInstance().allocArray(null, string.length());
+		Object[] array = Heap.getInstance().getArray(arrRef);
+		char[] tmp = string.toCharArray();
+		for (int i = 0; i < tmp.length; i++) {
+			array[i] = tmp[i];
+		}
+//			new String(tmp);
+		//NEW instr.
+		ClassFile stringCF = ClassResolver
+				.resolveWithLookup("java/lang/String");
+		HeapHandle heapRef = Heap.getInstance().allocObject(stringCF);
+
+		//INVOKEVIRT instr.
+		List<Object> args = new ArrayList<Object>();
+		args.add(heapRef);
+		args.add(arrRef);
+		ClassFile cf = ((HeapHandle) args.get(0)).getClassFile();
+
+		Method method;
+		ClassFile classFile = cf;
+		method = classFile.getMethod("<init>", "([C)V");
+		if (method == null) {
+			throw new AbstractMethodError("<init>" + " " + "([C)V");
+		}
+		frame.getInterpreter().run(cf, method, args);
+//		HeapHandle res = (HeapHandle) frame.pop();
+
+		return heapRef;
+	}
+	
+	public String getString(HeapHandle heapRef) {
+		if (heapRef.isNull()) {
+			return null;
+		}
+		
+		Interpreter interpreter = new Interpreter();
+		Frame frame = interpreter.getStack().newFrame();
+		frame.setInterpreter(interpreter);
+		
+		//INVOKEVIRT instr.
+		List<Object> args = new ArrayList<Object>();
+		args.add(heapRef);
+		ClassFile cf = heapRef.getClassFile();
+		Method method = cf.getMethod("toCharArray", "()[C");
+		if (method == null) {
+			throw new AbstractMethodError("<init>" + " " + "([C)V");
+		}
+		Object ret = frame.getInterpreter().run(cf, method, args);
+		//TODO runloop
+//		frame.getInterpreter().run
+		//get Character array
+		long arrRef = (Long) frame.pop();
+		Object[] characters = getArray(arrRef);
+		//to string
+		char[] tmp = new char[characters.length];
+		for (int i = 0; i < characters.length; i++) {
+			tmp[i] = (Character) characters[i];
+		}
+		String res = new String(tmp);
+		
+		return res;
+	}
+	
 }

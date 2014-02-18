@@ -23,8 +23,8 @@ public class MathTest {
 
 	@Test
 	public void testIntegerSub() {
-		frame.push(0x05);
 		frame.push(0x0A);
+		frame.push(0x05);
 
 		SUB<Integer> sub = new SUB<Integer>(frame);
 		sub.execute();
@@ -71,8 +71,8 @@ public class MathTest {
 	public void testDoubleSub() {
 		Double a = 5.1;
 		Double b = 4.0;
-		frame.push(b);
 		frame.push(a);
+		frame.push(b);
 		
 		SUB<Double> sub = new SUB<Double>(frame);
 		sub.execute();
@@ -108,8 +108,8 @@ public class MathTest {
 	}
 	@Test
 	public void testFloatSub() {
-		Float a = (float) 2.0e2;
-		Float b = (float) 3.0e2;
+		Float a = (float) 3.0e2;
+		Float b = (float) 2.0e2;
 		frame.push(a);
 		frame.push(b);
 		
