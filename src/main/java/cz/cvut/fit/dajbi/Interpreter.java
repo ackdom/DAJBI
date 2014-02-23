@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Level;
+
 import cz.cvut.fit.dajbi.heap.Heap;
 import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.heap.NativeObjectHandle;
@@ -58,8 +60,13 @@ public class Interpreter {
 		DAJBI.logger.error("Called method " + method.getName() + " "
 				+ method.getDescription() + " class: " + cf.getName());
 		if (method.getCodeAttribute() == null) {
-
+			DAJBI.logger.error("Native method");
+			Level logLevel = DAJBI.logger.getLevel();
+			DAJBI.logger.setLevel(Level.FATAL);
+			
 			callNative(cf, method, args);
+
+			DAJBI.logger.setLevel(logLevel);
 			return;
 
 		}
@@ -72,6 +79,8 @@ public class Interpreter {
 	}
 
 	private void callNative(ClassFile cf, Method method, List<Object> args) {
+		
+
 		
 		if (method.getName().equals("println")) {
 			Object arg = args.get(1);

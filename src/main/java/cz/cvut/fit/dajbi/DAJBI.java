@@ -22,7 +22,7 @@ public class DAJBI {
 
 		// Configure logger
 		BasicConfigurator.configure();
-		Logger.getRootLogger().setLevel(Level.DEBUG);
+		Logger.getRootLogger().setLevel(Level.FATAL);
 		logger.debug("Hello World!");
 		
 		if (args.length < 1) {

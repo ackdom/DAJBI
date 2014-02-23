@@ -37,6 +37,7 @@ import cz.cvut.fit.dajbi.instruction.load.GETFIELD;
 import cz.cvut.fit.dajbi.instruction.load.GETSTATIC;
 import cz.cvut.fit.dajbi.instruction.load.LOAD;
 import cz.cvut.fit.dajbi.instruction.math.ADD;
+import cz.cvut.fit.dajbi.instruction.math.DIV;
 import cz.cvut.fit.dajbi.instruction.math.IINC;
 import cz.cvut.fit.dajbi.instruction.math.LCMP;
 import cz.cvut.fit.dajbi.instruction.math.MUL;
@@ -240,6 +241,8 @@ public class InstructionFactory {
 			return new ADD<Integer>(f);
 		case imul:
 			return new MUL<Integer>(f);
+		case idiv:
+			return new DIV<Integer>(f);
 		case iinc:
 			return new IINC(f);
 		//double
@@ -439,6 +442,7 @@ public class InstructionFactory {
         iconst_3(6),
         iconst_4(7),
         iconst_5(8),
+        idiv(108),
         if_icmpeq(159),
         if_icmpne(160),
         if_icmplt(161),

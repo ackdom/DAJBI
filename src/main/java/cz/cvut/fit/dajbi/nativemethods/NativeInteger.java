@@ -3,6 +3,9 @@ package cz.cvut.fit.dajbi.nativemethods;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Level;
+
+import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.heap.Heap;
 import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.internal.ClassFile;

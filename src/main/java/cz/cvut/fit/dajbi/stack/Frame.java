@@ -6,6 +6,7 @@ import java.util.TreeMap;
 import cz.cvut.fit.dajbi.Interpreter;
 import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.internal.ClassFile;
+import cz.cvut.fit.dajbi.internal.Method;
 import cz.cvut.fit.dajbi.parser.Reader;
 
 public class Frame extends Stack<Object> {
@@ -15,6 +16,16 @@ public class Frame extends Stack<Object> {
 	ClassFile classFile;
 	Reader reader;
 	Frame invoker;
+	
+	private Method method;
+
+	public Method getMethod() {
+		return method;
+	}
+
+	void setMethod(Method method) {
+		this.method = method;
+	}
 
 	public Frame() {
 		super();

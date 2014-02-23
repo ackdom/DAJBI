@@ -27,6 +27,7 @@ public class SystemStack extends Stack<Frame> {
     	 Frame newFrame = newFrame();
     	 newFrame.classFile = cf;
     	 newFrame.reader = new Reader(m.getCodeAttribute().getCode());
+    	 newFrame.setMethod(m);
     	 
     	 return newFrame;
      }

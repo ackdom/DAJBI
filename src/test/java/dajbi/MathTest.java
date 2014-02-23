@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cz.cvut.fit.dajbi.instruction.math.ADD;
+import cz.cvut.fit.dajbi.instruction.math.DIV;
 import cz.cvut.fit.dajbi.instruction.math.MUL;
 import cz.cvut.fit.dajbi.instruction.math.SUB;
 import cz.cvut.fit.dajbi.stack.Frame;
@@ -51,6 +52,17 @@ public class MathTest {
 		MUL<Integer> sub = new MUL<Integer>(frame);
 		sub.execute();
 		assertEquals(Integer.valueOf(50), frame.pop());
+
+	}
+
+	@Test
+	public void testIntegerDiv() {
+		frame.push(0x0A);
+		frame.push(0x05);
+
+		DIV<Integer> div = new DIV<Integer>(frame);
+		div.execute();
+		assertEquals(Integer.valueOf(2), frame.pop());
 
 	}
 

@@ -26,7 +26,7 @@ public class IF extends Instruction {
 //			ByteBuffer buffer = ByteBuffer.allocate(4).putChar((Character) obj1);
 			obj1 = (int)(char) (Character) obj1;
 		}
-		int a = (Integer) obj1;
+		int a = ((Number) obj1).intValue();
 		int b = 0;
 		if (!singleCompare) {
 			b = a;
@@ -34,7 +34,7 @@ public class IF extends Instruction {
 			if (obj2 instanceof Character) {
 				obj2 = (int)(char)(Character) obj2;
 			}
-			a = (Integer) obj2;
+			a = ((Number) obj2).intValue();
 		}
 
 		if (comparator.compare(a, b)) {
