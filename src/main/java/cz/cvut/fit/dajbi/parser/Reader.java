@@ -7,6 +7,10 @@ public class Reader {
 	byte[] bytes;
 	int index;
 
+	public int getIndex() {
+		return index;
+	}
+
 	public Reader(byte[] byteArray) {
 		index = 0;
 		this.bytes = byteArray;
@@ -90,6 +94,10 @@ public class Reader {
 
 	public void move(int i) {
 		index += i;		
+	}
+	
+	public void moveAt(int i) {
+		index = i;
 	}
 
 }

@@ -16,7 +16,7 @@ public class FileClass {
 //		System.out.println("C:/temp/dajbi/aa.txt");
 //		File file = new File("C:/temp/dajbi/aa.txt");
 //		BufferedReader reader = new BufferedReader(new FileReader(file));
-		BufferedReader reader = new BufferedReader(new FileReader("C:/temp/dajbi/aa.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader("README.md"));
 		String line = reader.readLine();
 		while (line != null) {
 			System.out.println(line);

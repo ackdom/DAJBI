@@ -1,20 +1,19 @@
 package cz.cvut.fit.dajbi.internal.attributes;
 
+
 import cz.cvut.fit.dajbi.DAJBI;
 import cz.cvut.fit.dajbi.parser.AttributeReader;
+import cz.cvut.fit.dajbi.parser.Reader;
 
 public class CodeAttribute extends Attribute {
 
-	
-	//DUMMY NA PRESKOCENI EXCEPTION
-	static final int exceptionTable = 8;
-	
 	
 	short maxStack;
 	short maxLocals;
 	int codeLength;
 	byte[] code;
 	short exceptionTableLength;
+	ExceptionHandler[] exceptionTable;
 	short attributesCount;
 	Attribute[] attributes;
 	
@@ -22,14 +21,17 @@ public class CodeAttribute extends Attribute {
 	
 	public CodeAttribute(AttributeReader attributeReader) {
 		super(attributeReader);
+		Reader reader = attributeReader.getReader();
 		
 		maxStack = attributeReader.getReader().readShort();
 		maxLocals = attributeReader.getReader().readShort();
 		codeLength = attributeReader.getReader().readInt();
 		code = attributeReader.getReader().readBytes(codeLength);
 		exceptionTableLength = attributeReader.getReader().readShort();
-		//hack abysme nemuseli implementovat excpetiony zatim
-		attributeReader.getReader().readBytes(exceptionTableLength*exceptionTable);
+		exceptionTable = new ExceptionHandler[exceptionTableLength];
+		for (int i = 0; i < exceptionTableLength; i++) {
+			exceptionTable[i] = new ExceptionHandler(reader.readShort(), reader.readShort(), reader.readShort(), reader.readShort(), attributeReader);
+		}
 		
 		attributesCount = attributeReader.getReader().readShort();
 		
@@ -132,6 +134,12 @@ public class CodeAttribute extends Attribute {
 	 */
 	public void setAttributes(Attribute[] attributes) {
 		this.attributes = attributes;
+	}
+
+
+
+	public ExceptionHandler[] getExceptionTable() {
+		return exceptionTable;
 	}
 	
 	

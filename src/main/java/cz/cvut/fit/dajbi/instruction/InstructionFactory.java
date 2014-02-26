@@ -303,6 +303,9 @@ public class InstructionFactory {
 		case _goto:
 			return new GOTO(f);
 			
+		case athrow:
+			return new ATHROW(f);
+			
 			
 		// Arrays
 		case anewarray:

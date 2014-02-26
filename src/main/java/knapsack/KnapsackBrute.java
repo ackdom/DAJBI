@@ -19,8 +19,9 @@ public class KnapsackBrute extends Knapsack {
 				akt[j] = 0;
 			}
 			try {
-			boolean end = false;
-			while(!end) {
+//			boolean end = false;
+//			while(!end) {
+			while(true) {
 				if (aktV(instance) <= instance.M) {
 					int c = aktC(instance);
 					if (c >= res.c) {
@@ -29,7 +30,8 @@ public class KnapsackBrute extends Knapsack {
 						res.c = c;
 					}
 				}
-				end = incX();
+				incX();
+//				end = incX();
 			}
 			} catch (Exception e) {
 			}
@@ -40,22 +42,23 @@ public class KnapsackBrute extends Knapsack {
 		return res;
 	}
 	
-	public boolean incX() throws Exception {
-		return incX(0);
+	public void incX() throws Exception {
+		incX(0);
 	}
 	
-	public boolean incX(int k) throws Exception {
+	public void incX(int k) throws Exception {
 		if (k == akt.length) {
-//			throw new Exception();
-			return true;
+			throw new Exception();
+//			return true;
 		}
 		if (akt[k] == 0) {
 			akt[k] = 1;
 		} else {
 			akt[k] = 0;
-			return incX(k+1);
+			incX(k+1);
+//			return incX(k+1);
 		}
-		return false;
+//		return false;
 	}
 	
 	public int aktC(Instance instance) {
