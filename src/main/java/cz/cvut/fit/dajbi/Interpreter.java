@@ -1,9 +1,5 @@
 package cz.cvut.fit.dajbi;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +10,7 @@ import cz.cvut.fit.dajbi.heap.HeapHandle;
 import cz.cvut.fit.dajbi.heap.NativeObjectHandle;
 import cz.cvut.fit.dajbi.instruction.Instruction;
 import cz.cvut.fit.dajbi.instruction.InstructionFactory;
+import cz.cvut.fit.dajbi.internal.AccessFlag;
 import cz.cvut.fit.dajbi.internal.ClassFile;
 import cz.cvut.fit.dajbi.internal.Method;
 import cz.cvut.fit.dajbi.nativemethods.NativeFileReader;
@@ -55,8 +52,18 @@ public class Interpreter {
 	public void call(ClassFile cf, Method method) {
 		call(cf, method, new ArrayList<Object>());
 	}
+	
+	
+	
+	public void callAsync(final ClassFile cf, final Method method, final List<Object> args) {
+		Frame newFrame = stack.newFrame(cf, method);
+		newFrame.setInterpreter(this);
+		for (int i = 0; i < args.size(); i++) {
+			newFrame.setLocal(i, args.get(i));
+		}
+	}
 
-	public void call(ClassFile cf, Method method, List<Object> args) {
+	public void call(final ClassFile cf, final Method method, final List<Object> args) {
 		DAJBI.logger.error("Called method " + method.getName() + " "
 				+ method.getDescription() + " class: " + cf.getName());
 		if (method.getCodeAttribute() == null) {
@@ -70,6 +77,24 @@ public class Interpreter {
 			return;
 
 		}
+		
+		//Synchronized and void !!!!
+		char charAt = method.getDescription().charAt(method.getDescription().length()-1);
+		if(method.hasFlag(AccessFlag.ACC_SYNCHRONIZED) && charAt == 'V' ) {
+			System.out.println("Synchro");
+			Thread exampleThread =	new Thread() {
+				@Override
+			    public void run() {
+			        Interpreter interpreter = new Interpreter();
+			        interpreter.callAsync(cf, method,args);
+			        interpreter.runloop();
+			    }
+			};
+			exampleThread.start();			
+			
+			return;
+		}
+		
 		Frame newFrame = stack.newFrame(cf, method);
 		newFrame.setInterpreter(this);
 		for (int i = 0; i < args.size(); i++) {
@@ -151,7 +176,7 @@ public class Interpreter {
 
 	private Object runloop() {
 
-		DAJBI.logger.debug("Runloop started");
+		DAJBI.logger.info("Runloop started");
 		while (!stack.isEmpty()) {
 
 			Frame top = stack.top();
@@ -171,7 +196,7 @@ public class Interpreter {
 			byCode.execute();
 
 		}
-		DAJBI.logger.debug("Runloop ended");
+		DAJBI.logger.info("Runloop ended");
 		return null;
 	}
 

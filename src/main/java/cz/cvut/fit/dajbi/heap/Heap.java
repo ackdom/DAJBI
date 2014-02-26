@@ -27,7 +27,7 @@ public class Heap {
 	private Map<Long, ArrayHandle> arrays;
 	private Map<Long, Object> nativeInstances;
 	
-	private int heapSize = 64*1024*1024;
+	private int heapSize = 64*1024;
 	//pozor heapSize je ted int (vs. long)
 	byte[] heapData = new byte[heapSize];
 	byte[] heapNext = new byte[heapSize];

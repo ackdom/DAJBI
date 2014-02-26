@@ -70,7 +70,9 @@ public class Method {
 	}
 
 
-
+	public boolean hasFlag(int flag) {
+		return (flag & accessFlags) > 0 ? true : false;
+	}
 
 	/**
 	 * @return the attributesCount
@@ -89,5 +91,10 @@ public class Method {
 		 String x4 = x3.replace(" ", "");//remove the previously inserted spaces.
 		 return x4.length();//count the number of elements left.
 		}
+
+
+
+
+	
 
 }
